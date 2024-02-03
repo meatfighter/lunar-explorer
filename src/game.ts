@@ -1,12 +1,12 @@
 import { startAnimation, stopAnimation } from "./animate";
-import {PhysicalDimensions, Resolution} from "./graphics";
+import { cls, convertBufferToImage, draw, PhysicalDimensions, Resolution } from "./graphics";
 
 
 
 let canvas: HTMLCanvasElement | null;
 let ctx: CanvasRenderingContext2D | null;
 
-export function enter() {
+export async function enter() {
     const mainElement = document.getElementById("main-content") as HTMLElement;
     mainElement.innerHTML = `<canvas id="lunar-canvas" class="canvas" width="${Resolution.WIDTH}" 
             height="${Resolution.HEIGHT}"></canvas>`;
@@ -15,6 +15,13 @@ export function enter() {
         return;
     }
     windowResized();
+
+
+    cls();
+    draw('BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1');
+
+    const g = ctx as CanvasRenderingContext2D;
+    g.drawImage(await convertBufferToImage(), 0, 0);
 }
 
 export function update() {
@@ -27,14 +34,7 @@ export function render() {
         return;
     }
 
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, Resolution.WIDTH, Resolution.HEIGHT);
 
-    ctx.strokeStyle = '#FF0000';
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(10, 10);
-    ctx.stroke();
 }
 
 export function windowResized() {

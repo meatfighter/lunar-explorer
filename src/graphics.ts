@@ -8,12 +8,7 @@ export enum PhysicalDimensions {
     HEIGHT = 3,
 }
 
-export enum PixelDimensions {
-    WIDTH = PhysicalDimensions.WIDTH / Resolution.WIDTH,
-    HEIGHT = PhysicalDimensions.HEIGHT / Resolution.HEIGHT,
-}
-
-enum Color {
+export enum Color {
     BLACK = 0,
     BLUE = 1,
     GREEN = 2,
@@ -235,6 +230,10 @@ export function pset(x: number, y: number, color: number) {
     }
 }
 
+export function point(x: number, y: number) {
+    return (x >= 0 && y >= 0 && x < Resolution.WIDTH && y < Resolution.HEIGHT) ? buffer[Resolution.WIDTH * y + x] : 0;
+}
+
 export function line(x0: number, y0: number, x1: number, y1: number, color: number): void;
 export function line(x1: number, y1: number, color: number): void;
 export function line(_x0: number, _y0: number, _x1: number, _y1?: number, _color?: number): void {
@@ -341,4 +340,55 @@ export function paint(x: number, y: number, color: number, boundary: number = co
             x = x1;
         }
     }
+}
+
+async function createImage(rgbas: Uint8ClampedArray, width: number, height: number): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx === null) {
+            throw new Error('Failed to create 2d context.');
+        }
+        const imageData = new ImageData(rgbas, width, height);
+        ctx.putImageData(imageData, 0, 0);
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = _ => reject(new Error('Failed to load the image'));
+        image.src = canvas.toDataURL();
+    });
+}
+
+export async function get(x1: number, y1: number, x2: number, y2: number): Promise<HTMLImageElement> {
+    if (x2 < x1) {
+        let t = x2;
+        x2 = x1;
+        x1 = t;
+    }
+
+    if (y2 < y1) {
+        let t = y2;
+        y2 = y1;
+        y1 = t;
+    }
+
+    const width = x2 - x1 + 1;
+    const height = y2 - y1 + 1;
+    const rgbas = new Uint8ClampedArray(width * height * 4);
+    for (let y = y1, i = 0; y <= y2; ++y) {
+        for (let x = x1; x <= x2; ++x, i += 4) {
+            rgbas.set(palette[point(x, y)], i);
+        }
+    }
+
+    return createImage(rgbas, width, height);
+}
+
+export async function convertBufferToImage(): Promise<HTMLImageElement> {
+    const rgbas = new Uint8ClampedArray(Resolution.WIDTH * Resolution.HEIGHT * 4);
+    for (let i = buffer.length - 1, j = rgbas.length - 4; i >= 0; --i, j -= 4) {
+        rgbas.set(palette[buffer[i]], j);
+    }
+    return createImage(rgbas, Resolution.WIDTH, Resolution.HEIGHT);
 }
