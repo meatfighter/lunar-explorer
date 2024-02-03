@@ -1,17 +1,15 @@
 import { startAnimation, stopAnimation } from "./animate";
+import {PhysicalDimensions, Resolution} from "./graphics";
 
-enum Display {
-    WIDTH = 320,
-    HEIGHT = 200,
-}
+
 
 let canvas: HTMLCanvasElement | null;
 let ctx: CanvasRenderingContext2D | null;
 
 export function enter() {
     const mainElement = document.getElementById("main-content") as HTMLElement;
-    mainElement.innerHTML = `<canvas id="lunar-canvas" class="canvas" width="${Display.WIDTH}" 
-            height="${Display.HEIGHT}"></canvas>`;
+    mainElement.innerHTML = `<canvas id="lunar-canvas" class="canvas" width="${Resolution.WIDTH}" 
+            height="${Resolution.HEIGHT}"></canvas>`;
     canvas = document.getElementById("lunar-canvas") as HTMLCanvasElement | null;
     if (!canvas) {
         return;
@@ -30,7 +28,7 @@ export function render() {
     }
 
     ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, Display.WIDTH, Display.HEIGHT);
+    ctx.fillRect(0, 0, Resolution.WIDTH, Resolution.HEIGHT);
 
     ctx.strokeStyle = '#FF0000';
     ctx.beginPath();
@@ -56,33 +54,31 @@ export function windowResized() {
     const transform = new DOMMatrix();
 
     if (innerWidth >= innerHeight) {
-        canvas.width = Display.WIDTH;
-        canvas.height = Display.HEIGHT;
+        canvas.width = Resolution.WIDTH;
+        canvas.height = Resolution.HEIGHT;
 
         styleWidth = innerWidth;
-        styleHeight = styleWidth * Display.HEIGHT / Display.WIDTH;
+        styleHeight = styleWidth * PhysicalDimensions.HEIGHT / PhysicalDimensions.WIDTH;
         if (innerHeight < styleHeight) {
             styleHeight = innerHeight;
-            styleWidth = styleHeight * Display.WIDTH / Display.HEIGHT;
+            styleWidth = styleHeight * PhysicalDimensions.WIDTH / PhysicalDimensions.HEIGHT;
         }
     } else {
-        canvas.width = Display.HEIGHT as number;
-        canvas.height = Display.WIDTH as number;
+        canvas.width = Resolution.HEIGHT as number;
+        canvas.height = Resolution.WIDTH as number;
 
-        styleWidth = innerHeight as number;
-        styleHeight = styleWidth * Display.HEIGHT / Display.WIDTH;
-        if (innerWidth < styleHeight) {
-            styleHeight = innerWidth as number;
-            styleWidth = styleHeight * Display.WIDTH / Display.HEIGHT;
+        styleHeight = innerHeight;
+        styleWidth = styleHeight * PhysicalDimensions.HEIGHT / PhysicalDimensions.WIDTH;
+        if (innerWidth < styleWidth) {
+            styleWidth = innerWidth;
+            styleHeight = styleWidth * PhysicalDimensions.WIDTH / PhysicalDimensions.HEIGHT;
         }
 
         transform.a = transform.d = transform.e = 0;
         transform.b = -1;
         transform.c = 1;
-        transform.f = Display.WIDTH;
+        transform.f = Resolution.WIDTH;
     }
-
-    console.log(`${styleWidth} ${styleHeight}`);
 
     canvas.style.display = 'block';
     canvas.style.width = `${Math.floor(styleWidth)}px`;

@@ -6,8 +6,8 @@
 }
 
 body {
-    background-color: #1E1F22;
-    color: #B5B5B5;
+    background-color: #C2BCB1;
+    color: #FFFFFF;
     margin: 0;
     padding: 0;
     user-select: none;
@@ -17,4 +17,5 @@ body {
 #lunar-canvas {
     image-rendering: pixelated;
     display: block;
+    position: absolute;
 }
