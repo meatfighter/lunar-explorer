@@ -1,0 +1,24 @@
+{
+  "name": "lunar-explorer",
+  "version": "1.0.0",
+  "description": "...",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meatfighter/lunar-explorer"
+  },
+  "author": "Mike Birken (https://meatfighter.com/lunar-explorer)",
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf public_html/scripts/*",
+    "pack": "npx webpack --mode production",
+    "build": "npm run clean && npm run pack"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
