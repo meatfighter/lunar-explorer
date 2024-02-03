@@ -1,0 +1,20 @@
+@media only screen and (max-device-width: 400px) {
+    html {
+        -webkit-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+}
+
+body {
+    background-color: #1E1F22;
+    color: #B5B5B5;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#lunar-canvas {
+    image-rendering: pixelated;
+    display: block;
+}

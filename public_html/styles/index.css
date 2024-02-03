@@ -1,0 +1,99 @@
+@media only screen and (max-device-width: 400px) {
+    html {
+        -webkit-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+}
+
+body {
+    background-color: #1E1F22;
+    color: #B5B5B5;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    max-width: 978px;
+    margin: 0 auto;
+}
+
+p {
+    font-size: 16px;
+    line-height: 27px;
+    font-weight: 300;
+}
+
+p.title {
+    font-family: 'Reem Kufi Fun', serif;
+    font-size: 72px;
+    font-weight: 500;
+    text-align: center;
+    padding-top: 20px;
+    margin-bottom: 0;
+    line-height: 80px;
+}
+
+button {
+    background-color: #C3986F;
+    color: #1E1F22;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 16px;
+    margin: 25px auto 30px;
+}
+
+button:active {
+    transform: translateY(2px);
+}
+
+table.copyright {
+    width: 100%;
+    margin-top: -15px;
+}
+
+p.copyright {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+p.home {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 27px;
+    font-weight: 300;
+    text-align: right;
+}
+
+a,a:visited {
+    color: #C3986F;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+a:hover {
+    color: #DDAC7E;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+hr {
+    margin-top: 60px;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: max-content auto;
+    margin-left: 20px;
+}
+
+dt {
+    grid-column-start: 1;
+}
+
+dd {
+    grid-column-start: 2;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
