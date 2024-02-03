@@ -8,6 +8,11 @@ export enum PhysicalDimensions {
     HEIGHT = 3,
 }
 
+export enum PixelDimensions {
+    WIDTH = PhysicalDimensions.WIDTH / Resolution.WIDTH,
+    HEIGHT = PhysicalDimensions.HEIGHT / Resolution.HEIGHT,
+}
+
 enum Color {
     BLACK = 0,
     BLUE = 1,
@@ -27,7 +32,7 @@ enum Color {
     WHITE = 15,
 }
 
-const rgbs = [
+const RGB = [
     0x000000,
     0x0000AA,
     0x00AA00,
@@ -50,11 +55,179 @@ function toColor(pal: number) {
     return new Uint8ClampedArray([ pal >>> 16, 0xFF & (pal >>> 8), 0xFF & pal, 0xFF ]);
 }
 
-const palette: Uint8ClampedArray[] = new Array(rgbs.length).fill(null).map((_, i) => toColor(rgbs[i]));
+const palette: Uint8ClampedArray[] = new Array(RGB.length).fill(null).map((_, i) => toColor(RGB[i]));
 
 const buffer: number[] = new Array(Resolution.WIDTH * Resolution.HEIGHT).fill(Color.BLACK);
 let penX = 0;
 let penY = 0;
+
+export function cls() {
+    buffer.fill(Color.BLACK);
+}
+
+enum DrawTokenType {
+    STRING,
+    NUMBER,
+}
+
+class DrawToken {
+
+    type: DrawTokenType;
+    value: String | number;
+    index: number;
+
+    constructor(type: DrawTokenType, value: string, index: number) {
+        this.type = type;
+        this.value = (type === DrawTokenType.NUMBER) ? parseInt(value) : value;
+        this.index = index;
+    }
+}
+
+function lexDrawString(str: string) {
+    str = str.toUpperCase();
+
+    let tokens: DrawToken[] = [];
+    let type: DrawTokenType | null = null;
+    let value = '';
+    let index = 0;
+
+    for (let i = 0; i <= str.length; ++i) {
+        const c = (i < str.length) ? str.charAt(i) : '\0';
+        if (c >= 'A' && c <= 'Z') {
+            if (type !== DrawTokenType.STRING) {
+                if (type !== null) {
+                    tokens.push(new DrawToken(type, value, index));
+                }
+                type = DrawTokenType.STRING;
+                value = '';
+                index = i;
+            }
+            value += c;
+        } else if (c >= '0' && c <= '9') {
+            if (type !== DrawTokenType.NUMBER) {
+                if (type !== null) {
+                    tokens.push(new DrawToken(type, value, index));
+                }
+                type = DrawTokenType.NUMBER;
+                value = '';
+                index = i;
+            }
+            value += c;
+        } else {
+            if (type !== null) {
+                tokens.push(new DrawToken(type, value, index));
+            }
+            type = null;
+            value = '';
+        }
+    }
+
+    return tokens;
+}
+
+export function draw(str: string) {
+    const tokens = lexDrawString(str);
+
+    let cursorX = 0;
+    let cursorY = 0;
+    let i = 0;
+    let color = 0;
+
+    while (i < tokens.length) {
+        const commandToken = tokens[i++];
+        if (commandToken.type !== DrawTokenType.STRING) {
+            throw new Error(`<${commandToken.index}> Expected string: ${commandToken.value}`);
+        }
+        const commandStr = commandToken.value as string;
+        let prefix: string | null;
+        let command: string;
+        if (commandStr.length > 2) {
+            throw new Error(`<${commandToken.index}> String too long: ${commandToken.value}`);
+        } else if (commandStr.length === 2) {
+            prefix = commandStr.charAt(0);
+            command = commandStr.charAt(1);
+        } else {
+            prefix = null;
+            command = commandStr.charAt(0);
+        }
+
+        if (i >= tokens.length) {
+            throw new Error('Expected number, but reached end of string.');
+        }
+        const valueToken = tokens[i++];
+        if (valueToken.type !== DrawTokenType.NUMBER) {
+            throw new Error(`<${valueToken.index}> Expected number: ${valueToken.value}`);
+        }
+        const value = valueToken.value as number;
+
+        let targetX = cursorX;
+        let targetY = cursorY;
+        switch (command) {
+            case 'C':
+                color = value;
+                continue;
+
+            case 'U':
+                targetY -= value;
+                break;
+            case 'D':
+                targetY += value;
+                break;
+            case 'L':
+                targetX -= value;
+                break;
+            case 'R':
+                targetX += value;
+                break;
+
+            case 'E':
+                targetX += value;
+                targetY -= value;
+                break;
+            case 'F':
+                targetX += value;
+                targetY += value;
+                break;
+            case 'G':
+                targetX -= value;
+                targetY += value;
+                break;
+            case 'H':
+                targetX -= value;
+                targetY -= value;
+                break;
+
+            case 'M': {
+                if (i >= tokens.length) {
+                    throw new Error('Expected number, but reached end of string.');
+                }
+                const valueToken2 = tokens[i++];
+                if (valueToken2.type !== DrawTokenType.NUMBER) {
+                    throw new Error(`<${valueToken2.index}> Expected number: ${valueToken2.value}`);
+                }
+                targetX = value;
+                targetY = valueToken2.value as number;
+                break;
+            }
+
+            default:
+                throw new Error(`<${commandToken.index}> Unknown command: ${command}`);
+        }
+
+        if (prefix === null) {
+            line(cursorX, cursorY, targetX, targetY, color);
+            cursorX = targetX;
+            cursorY = targetY;
+        } else if (prefix === 'B') {
+            cursorX = targetX;
+            cursorY = targetY;
+        } else if (prefix === 'N') {
+            line(cursorX, cursorY, targetX, targetY, color);
+        } else {
+            throw new Error(`<${commandToken.index}> Invalid prefix: ${commandToken.value}`);
+        }
+    }
+}
 
 export function pset(x: number, y: number, color: number) {
     if (x >= 0 && y >= 0 && x < Resolution.WIDTH && y < Resolution.HEIGHT) {
