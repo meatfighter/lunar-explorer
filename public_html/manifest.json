@@ -1,0 +1,18 @@
+{
+  "short_name": "Lunar",
+  "name": "Lunar Explorer",
+  "icons": [
+    {
+      "src": "google-touch-icon-192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "google-touch-icon-512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#1E1F22",
+  "theme_color": "#1E1F22",
+  "display": "fullscreen"
+}
