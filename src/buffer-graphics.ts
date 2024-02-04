@@ -52,12 +52,54 @@ function toColor(pal: number) {
 
 const palette: Uint8ClampedArray[] = new Array(RGB.length).fill(null).map((_, i) => toColor(RGB[i]));
 
-const buffer: number[] = new Array(Resolution.WIDTH * Resolution.HEIGHT).fill(Color.BLACK);
+const glyphs: Uint8ClampedArray[][] = Array.from({length: 64}, () => Array.from({length: 8},
+        () => new Uint8ClampedArray(8).fill(0)));
+(() => {
+    const glyphBytes = atob('AAAAAAAAAAAMHh4MDAAMADY2NgAAAAAANjZ/Nn82NgAMPgMeMB8MAABjMxgMZmMAHDYcbjszbgAGBgMAAAAAABgM' +
+        'BgYGDBgABgwYGBgMBgAAZjz/PGYAAAAMDD8MDAAAAAAAAAAMDAYAAAA/AAAAAAAAAAAADAwAYDAYDAYDAQA+Y3N7b2c+AAwODAwMDD8AHjMw' +
+        'HAYzPwAeMzAcMDMeADg8NjN/MHgAPwMfMDAzHgAcBgMfMzMeAD8zMBgMDAwAHjMzHjMzHgAeMzM+MBgOAAAMDAAADAwAAAwMAAAMDAYYDAYD' +
+        'BgwYAAAAPwAAPwAABgwYMBgMBgAeMzAYDAAMAD5je3t7Ax4ADB4zMz8zMwA/ZmY+ZmY/ADxmAwMDZjwAHzZmZmY2HwB/RhYeFkZ/AH9GFh4W' +
+        'Bg8APGYDA3NmfAAzMzM/MzMzAB4MDAwMDB4AeDAwMDMzHgBnZjYeNmZnAA8GBgZGZn8AY3d/f2tjYwBjZ297c2NjABw2Y2NjNhwAP2ZmPgYG' +
+        'DwAeMzMzOx44AD9mZj42ZmcAHjMGDBgzHgA/LQwMDAweADMzMzMzMz8AMzMzMzMeDABjY2Nrf3djAGNjNhwcNmMAMzMzHgwMHgB/YzEYTGZ/' +
+        'AB4GBgYGBh4AAwYMGDBgQAAeGBgYGBgeAAgcNmMAAAAAAAAAAAAAAP8=')
+    for (let i = 0, j = 0; i < 64; ++i) {
+        const c = glyphs[i];
+        for (let y = 0; y < 8; ++y) {
+            const r = c[y];
+            let v = glyphBytes.charCodeAt(j++);
+            for (let x = 0; x < 8; ++x, v >>= 1) {
+                if ((v & 1) === 1) {
+                    r[x] = Color.WHITE;
+                }
+            }
+        }
+    }
+})();
+
+const buffer = new Uint8ClampedArray(Resolution.WIDTH * Resolution.HEIGHT).fill(Color.BLACK);
 let penX = 0;
 let penY = 0;
 
 export function cls() {
     buffer.fill(Color.BLACK);
+}
+
+let cursorX = 0;
+let cursorY = 0;
+
+export function locate(row: number, col: number) {
+    cursorX = 8 * (col - 1);
+    cursorY = 8 * (row - 1);
+}
+
+export function print(str: string) {
+    for (let i = 0; i < str.length; ++i) {
+        const glyph = glyphs[str.charCodeAt(i) - 32];
+        for (let y = 0; y < 8; ++y) {
+            buffer.set(glyph[y], Resolution.WIDTH * (y + cursorY) + cursorX);
+        }
+        cursorX += 8;
+    }
 }
 
 enum DrawTokenType {
@@ -226,12 +268,13 @@ export function draw(str: string) {
 
 export function pset(x: number, y: number, color: number) {
     if (x >= 0 && y >= 0 && x < Resolution.WIDTH && y < Resolution.HEIGHT) {
-        buffer[Resolution.WIDTH * y + x] = color;
+        buffer[Resolution.WIDTH * Math.floor(y) + Math.floor(x)] = color;
     }
 }
 
 export function point(x: number, y: number) {
-    return (x >= 0 && y >= 0 && x < Resolution.WIDTH && y < Resolution.HEIGHT) ? buffer[Resolution.WIDTH * y + x] : 0;
+    return (x >= 0 && y >= 0 && x < Resolution.WIDTH && y < Resolution.HEIGHT)
+            ? buffer[Resolution.WIDTH * Math.floor(y) + Math.floor(x)] : 0;
 }
 
 export function line(x0: number, y0: number, x1: number, y1: number, color: number): void;
@@ -247,15 +290,15 @@ export function line(_x0: number, _y0: number, _x1: number, _y1?: number, _color
     if (_y1 === undefined || _color === undefined) {
         x0 = penX;
         y0 = penY;
-        x1 = _x0;
-        y1 = _y0;
-        color = _x1;
+        x1 = Math.floor(_x0);
+        y1 = Math.floor(_y0);
+        color = Math.floor(_x1);
     } else {
-        x0 = _x0;
-        y0 = _y0;
-        x1 = _x1;
-        y1 = _y1;
-        color = _color;
+        x0 = Math.floor(_x0);
+        y0 = Math.floor(_y0);
+        x1 = Math.floor(_x1);
+        y1 = Math.floor(_y1);
+        color = Math.floor(_color);
     }
 
     penX = x1;
@@ -300,7 +343,12 @@ function isInside(x: number, y: number, boundary: number) {
             && buffer[Resolution.WIDTH * y + x] !== boundary;
 }
 
-export function paint(x: number, y: number, color: number, boundary: number = color) {
+export function paint(_x: number, _y: number, _color: number, _boundary: number = _color) {
+    let x = Math.floor(_x);
+    let y = Math.floor(_y);
+    let color = Math.floor(_color);
+    let boundary = Math.floor(_boundary);
+
     if (!isInside(x, y, boundary)) {
         return;
     }
@@ -342,25 +390,12 @@ export function paint(x: number, y: number, color: number, boundary: number = co
     }
 }
 
-async function createImage(rgbas: Uint8ClampedArray, width: number, height: number): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx === null) {
-            throw new Error('Failed to create 2d context.');
-        }
-        const imageData = new ImageData(rgbas, width, height);
-        ctx.putImageData(imageData, 0, 0);
-        const image = new Image();
-        image.onload = () => resolve(image);
-        image.onerror = _ => reject(new Error('Failed to load the image'));
-        image.src = canvas.toDataURL();
-    });
-}
+export async function get(_x1: number, _y1: number, _x2: number, _y2: number): Promise<ImageBitmap> {
+    let x1 = Math.floor(_x1);
+    let y1 = Math.floor(_y1);
+    let x2 = Math.floor(_x2);
+    let y2 = Math.floor(_y2);
 
-export async function get(x1: number, y1: number, x2: number, y2: number): Promise<HTMLImageElement> {
     if (x2 < x1) {
         let t = x2;
         x2 = x1;
@@ -382,13 +417,13 @@ export async function get(x1: number, y1: number, x2: number, y2: number): Promi
         }
     }
 
-    return createImage(rgbas, width, height);
+    return createImageBitmap(new ImageData(rgbas, width, height));
 }
 
-export async function convertBufferToImage(): Promise<HTMLImageElement> {
+export async function convertBufferToImage(): Promise<ImageBitmap> {
     const rgbas = new Uint8ClampedArray(Resolution.WIDTH * Resolution.HEIGHT * 4);
     for (let i = buffer.length - 1, j = rgbas.length - 4; i >= 0; --i, j -= 4) {
         rgbas.set(palette[buffer[i]], j);
     }
-    return createImage(rgbas, Resolution.WIDTH, Resolution.HEIGHT);
+    return createImageBitmap(new ImageData(rgbas, Resolution.WIDTH, Resolution.HEIGHT));
 }

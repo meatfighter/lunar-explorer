@@ -1,6 +1,6 @@
 import { render, update } from "./game";
 
-export const FRAMES_PER_SECOND = 60;
+export const FRAMES_PER_SECOND = 10;
 export const MILLIS_PER_FRAME = 1000 / FRAMES_PER_SECOND;
 const MAX_UPDATES_WITHOUT_RENDER = 5;
 

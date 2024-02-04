@@ -14,6 +14,12 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+/*@media (pointer: coarse) {*/
+/*    html, body {*/
+/*        touch-action: none;*/
+/*    }*/
+/*}*/
+
 #lunar-canvas {
     image-rendering: pixelated;
     display: block;

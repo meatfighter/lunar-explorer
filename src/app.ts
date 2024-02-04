@@ -1,51 +1,24 @@
-import { NoParamVoidFunc } from "./no-param-void-func";
-import { enter, windowResized } from "./game";
+import { init as initGame, enter as enterGame, exit as exitGame } from "./game";
 
-let wakeLock: WakeLockSentinel | null = null;
-let acquiringWaitLock = false;
 
-let removeMediaEventListener: NoParamVoidFunc | null = null;
+async function init() {
+    window.addEventListener('error', e => {
+        console.error(`Caught in global handler: ${e.message}`, { // TODO REMOVE THIS
+            source: e.filename,
+            lineno: e.lineno,
+            colno: e.colno,
+            error: e.error
+        });
 
-function acquireWakeLock() {
-    if (!acquiringWaitLock && wakeLock === null && 'wakeLock' in navigator) {
-        acquiringWaitLock = true;
-        navigator.wakeLock.request('screen')
-            .then(w => {
-                if (acquiringWaitLock) {
-                    wakeLock = w;
-                    wakeLock.addEventListener("release", () => {
-                        if (!acquiringWaitLock) {
-                            wakeLock = null;
-                        }
-                    });
-                }
-            }).catch(_ => {
-        }).finally(() => acquiringWaitLock = false);
-    }
-}
-
-const updatePixelRatio = () => {
-    if (removeMediaEventListener != null) {
-        removeMediaEventListener();
-    }
-    const media = matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
-    media.addEventListener("change", updatePixelRatio);
-    removeMediaEventListener = () => media.removeEventListener("change", updatePixelRatio);
-
-    windowResized();
-};
-
-function init() {
+        e.preventDefault();
+        // TODO SHOW DEATH SCREEN
+    });
+    window.addEventListener('unhandledrejection', e => e.preventDefault());
     document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
     window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            acquireWakeLock();
-        }
-    });
-    window.addEventListener('resize', windowResized);
-    enter();
-    updatePixelRatio();
+
+    await initGame();
+    enterGame();
 }
 
 document.addEventListener('DOMContentLoaded', init);
