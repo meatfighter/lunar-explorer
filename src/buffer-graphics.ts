@@ -46,11 +46,13 @@ const RGB = [
     0xFFFFFF,
 ];
 
-function toColor(pal: number) {
-    return new Uint8ClampedArray([ pal >>> 16, 0xFF & (pal >>> 8), 0xFF & pal, 0xFF ]);
+function toColor(pal: number, alpha = 0xFF) {
+    return new Uint8ClampedArray([ pal >>> 16, 0xFF & (pal >>> 8), 0xFF & pal, alpha ]);
 }
 
-const palette: Uint8ClampedArray[] = new Array(RGB.length).fill(null).map((_, i) => toColor(RGB[i]));
+const bufferPalette: Uint8ClampedArray[] = new Array(RGB.length).fill(null).map((_, i) => toColor(RGB[i]));
+const spritePalette: Uint8ClampedArray[] = new Array(RGB.length).fill(null)
+        .map((_, i) => toColor(RGB[i], i === Color.BLACK ? 0x00 : 0xFF));
 
 const glyphs: Uint8ClampedArray[][] = Array.from({length: 64}, () => Array.from({length: 8},
         () => new Uint8ClampedArray(8).fill(0)));
@@ -413,7 +415,7 @@ export async function get(_x1: number, _y1: number, _x2: number, _y2: number): P
     const rgbas = new Uint8ClampedArray(width * height * 4);
     for (let y = y1, i = 0; y <= y2; ++y) {
         for (let x = x1; x <= x2; ++x, i += 4) {
-            rgbas.set(palette[point(x, y)], i);
+            rgbas.set(spritePalette[point(x, y)], i);
         }
     }
 
@@ -423,7 +425,7 @@ export async function get(_x1: number, _y1: number, _x2: number, _y2: number): P
 export async function convertBufferToImage(): Promise<ImageBitmap> {
     const rgbas = new Uint8ClampedArray(Resolution.WIDTH * Resolution.HEIGHT * 4);
     for (let i = buffer.length - 1, j = rgbas.length - 4; i >= 0; --i, j -= 4) {
-        rgbas.set(palette[buffer[i]], j);
+        rgbas.set(bufferPalette[buffer[i]], j);
     }
     return createImageBitmap(new ImageData(rgbas, Resolution.WIDTH, Resolution.HEIGHT));
 }

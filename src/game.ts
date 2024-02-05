@@ -41,7 +41,7 @@ const caveXYs = [ 260, 20, 290, 90, 320, 90, 320, 110, 290, 110, 270, 180, 70, 1
 
 let state = State.GAME_START;
 let level = 0;
-let stalactiteHeight = 0;
+let minStalactiteHeight = 0;
 let shipX = 0;
 let shipY = 0;
 let shipYA = 0;
@@ -184,7 +184,7 @@ export function update() {
 
 function updateGameStart() {
     level = 1;
-    stalactiteHeight = 40;
+    minStalactiteHeight = 40;
     updateLevelStart();
 }
 
@@ -222,7 +222,7 @@ function updatePlaying() {
         // TODO RENDER GAME OVER
     } else if (shipX >= 303) {
         ++level;
-        stalactiteHeight += 2;
+        minStalactiteHeight += 2;
         updateLevelStart();
     }
 }
@@ -258,7 +258,7 @@ async function createCaveImage() {
     for (let x = 60; x <= 240; x += 20) {
 
         // Draw stalactite with random height based on the level.
-        let y = Math.floor(Math.random() * 43 + 1) + stalactiteHeight;
+        let y = Math.floor(Math.random() * 43 + 1) + minStalactiteHeight;
         line(x, 20, x + 10, y, Color.BROWN);
         line(x + 20, 20, Color.BROWN);
         paint(x + 10, 22, Color.BROWN, Color.BROWN);
