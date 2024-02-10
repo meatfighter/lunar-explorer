@@ -68,55 +68,7 @@ export async function init() {
     cls();
     draw('BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1');
     shipImage = await get(0, 0, 16, 8);
-
-    // TODO REMOVE THIS
-    // const response = await fetch('ascii.png');
-    // const blob = await response.blob();
-    // const asciiImage = await createImageBitmap(blob);
-    // const data = await readImageBitmapPixels(asciiImage);
-    // if (!data) {
-    //     return;
-    // }
-    //
-    // let str = '';
-    // for (let i = 0; i < 64; ++i) {
-    //     for (let y = 0; y < 8; ++y) {
-    //         let s = 0;
-    //         for (let x = 7; x >= 0; --x) {
-    //             s <<= 1;
-    //             if (data[4 * (512 * y + x + 8 * i)] !== 0) {
-    //                 s |= 1;
-    //             }
-    //         }
-    //         str += String.fromCharCode(s);
-    //     }
-    // }
-    // console.log(btoa(str));
 }
-
-// TODO REMOVE THIS
-// async function readImageBitmapPixels(imageBitmap: ImageBitmap) {
-//     // Create a canvas element dynamically
-//     const canvas = document.createElement('canvas');
-//     canvas.width = imageBitmap.width;
-//     canvas.height = imageBitmap.height;
-//
-//     // Get the 2D context of the canvas
-//     const g = canvas.getContext('2d');
-//     if (!g) {
-//         return;
-//     }
-//
-//     // Draw the ImageBitmap onto the canvas
-//     g.drawImage(imageBitmap, 0, 0);
-//
-//     // Use getImageData to read the pixels of the entire canvas
-//     const imageData = g.getImageData(0, 0, canvas.width, canvas.height);
-//
-//     // The imageData.data contains the pixel data (RGBA values)
-//     // Now you can access or manipulate the pixel data
-//     return imageData.data;
-// }
 
 export function enter() {
     exiting = false;

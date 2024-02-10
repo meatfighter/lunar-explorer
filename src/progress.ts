@@ -1,3 +1,8 @@
+import JSZip from 'jszip';
+import { download } from "./download";
+
+const ZIP_DOWNLOAD_PERCENT = 90;
+
 let landscape = false;
 
 export function enter() {
@@ -11,11 +16,31 @@ export function enter() {
             </div>`;
 
     windowResized();
+
+    const progressBar = document.getElementById('loading-progress') as HTMLProgressElement;
+    download('lunear-explorer.zip', frac => progressBar.value = ZIP_DOWNLOAD_PERCENT * frac).then(onDownload);
 }
 
 export function exit() {
     window.removeEventListener('resize', windowResized);
     window.removeEventListener('touchmove', onTouchMove);
+}
+
+async function onDownload(arrayBuffer: Uint8Array) {
+    const progressBar = document.getElementById('loading-progress') as HTMLProgressElement;
+    const zip = new JSZip();
+    const entries = Object.entries((await zip.loadAsync(arrayBuffer)).files);
+
+    for (let i = 0; i < entries.length; ++i) {
+        const [ filename, fileData ] = entries[i];
+        if (fileData.dir) {
+            continue;
+        }
+        if (filename.endsWith('.mp3')) {
+            const data = await fileData.async('arraybuffer');
+        }
+        progressBar.value = ZIP_DOWNLOAD_PERCENT + (100 - ZIP_DOWNLOAD_PERCENT) * i / (entries.length - 1);
+    }
 }
 
 function onTouchMove(e: TouchEvent) {
