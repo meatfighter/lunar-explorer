@@ -7,8 +7,6 @@ let landscape = false;
 export function enter() {
     document.body.style.backgroundColor = '#1E1F22';
 
-    volume = getVolume();
-
     window.addEventListener('resize', windowResized);
     window.addEventListener('touchmove', onTouchMove, { passive: false });
 
@@ -17,7 +15,7 @@ export function enter() {
             <div id="start-div">
                 <div class="volume-div">
                     <span class="left-volume-label" id="left-volume-span" lang="en">&#x1F56A;</span>
-                    <input type="range" id="volume-input" min="0" max="1" step="any" value="0.1">
+                    <input type="range" id="volume-input" min="0" max="100" step="any" value="10">
                     <span class="right-volume-label" id="right-volume-span" lang="en">100</span>
                 </div>
                 <div id="go-div">
@@ -25,8 +23,10 @@ export function enter() {
                 </div>
             </div>`;
 
+    volume = getVolume();
     const volumeInput = document.getElementById('volume-input') as HTMLInputElement;
     volumeInput.addEventListener('input', volumeChanged);
+    volumeInput.value = String(volume);
 
     const startButton = document.getElementById('start-button') as HTMLButtonElement;
     startButton.addEventListener('click', startButtonClicked);
@@ -78,18 +78,8 @@ function volumeChanged() {
     const volumeInput = document.getElementById('volume-input') as HTMLInputElement;
     const rightVolumeSpan = document.getElementById('right-volume-span') as HTMLSpanElement;
 
-    const value = (+volumeInput.value - +volumeInput.min) / (+volumeInput.max - +volumeInput.min) * 100;
-    volumeInput.style.setProperty('--thumb-position', `${value}%`);
-
-    if (value === 0) {
-        volume = 0;
-    } else if (value === 100) {
-        volume = 100;
-    } else if (value < 50) {
-        volume = Math.ceil(value);
-    } else {
-        volume = Math.floor(value);
-    }
+    volume = 100 * (+volumeInput.value - +volumeInput.min) / (+volumeInput.max - +volumeInput.min);
+    volumeInput.style.setProperty('--thumb-position', `${volume}%`);
 
     if (volume === 0) {
         leftVolumeSpan.textContent = '\u{1F507}';
@@ -105,7 +95,7 @@ function volumeChanged() {
         }
     }
 
-    rightVolumeSpan.textContent = String(volume);
+    rightVolumeSpan.textContent = String(Math.round(volume));
 }
 
 function windowResized() {

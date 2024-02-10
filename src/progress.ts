@@ -35,7 +35,6 @@ function onDownload(arrayBuffer: Uint8Array) {
             return;
         }
         if (filename.endsWith('.mp3')) {
-            console.log(filename); // TODO REMOVE
             decodeAudioData(filename, fileData);
         }
     }));

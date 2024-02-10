@@ -19,8 +19,8 @@ import { enter as enterStart } from './start';
 import { playSoundEffect } from "./sfx";
 
 const SUCCESS_FRAMES = FRAMES_PER_SECOND;
-const GAME_OVER_BLOCK_TAP_FRAMES = 2 * FRAMES_PER_SECOND;
-const GAME_OVER_MAX_FRAMES = 8 * FRAMES_PER_SECOND;
+const GAME_OVER_BLOCK_TAP_FRAMES = FRAMES_PER_SECOND;
+const GAME_OVER_MAX_FRAMES = 29 * FRAMES_PER_SECOND;
 
 enum State {
     GAME_START,
