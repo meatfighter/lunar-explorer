@@ -1,4 +1,5 @@
 import { init as initGame, enter as enterGame, exit as exitGame } from "./game";
+import { enter as enterStart, exit as exitStart } from "./start";
 
 
 async function init() {
@@ -15,10 +16,11 @@ async function init() {
     });
     window.addEventListener('unhandledrejection', e => e.preventDefault());
     document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
-    window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
-    await initGame();
-    enterGame();
+    // await initGame();
+    // enterGame();
+
+    enterStart();
 }
 
 document.addEventListener('DOMContentLoaded', init);

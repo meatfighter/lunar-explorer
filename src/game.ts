@@ -122,6 +122,7 @@ export function enter() {
     exiting = false;
 
     window.addEventListener('resize', windowResized);
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
     document.addEventListener('visibilitychange', onVisibilityChanged);
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
@@ -147,6 +148,7 @@ export function enter() {
 export function exit() {
     exiting = true;
     window.removeEventListener('resize', windowResized);
+    window.removeEventListener('touchmove', onTouchMove);
     document.removeEventListener('visibilitychange', onVisibilityChanged);
     document.removeEventListener('keydown', onKeyDown);
     document.removeEventListener('keyup', onKeyUp);
@@ -163,6 +165,10 @@ export function exit() {
     touchPressed.clear();
     mouseButtonsPressed.clear();
     releaseWakeLock();
+}
+
+function onTouchMove(e: TouchEvent) {
+    e.preventDefault();
 }
 
 export function update() {
