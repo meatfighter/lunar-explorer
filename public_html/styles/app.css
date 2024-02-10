@@ -143,3 +143,7 @@ button:disabled {
 button:disabled:active {
     transform: none;
 }
+
+button:focus {
+    outline: none;
+}
