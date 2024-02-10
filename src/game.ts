@@ -1,4 +1,4 @@
-import { startAnimation, stopAnimation } from './animate';
+import { FRAMES_PER_SECOND, startAnimation, stopAnimation } from './animate';
 import {
     cls,
     Color,
@@ -16,13 +16,19 @@ import {
 import { acquireWakeLock, releaseWakeLock } from './wake-lock';
 import { NoParamVoidFunc } from './no-param-void-func';
 import { enter as enterStart } from './start';
-import {playSoundEffect} from "./sfx";
+import { playSoundEffect } from "./sfx";
+
+const SUCCESS_FRAMES = FRAMES_PER_SECOND;
+const GAME_OVER_BLOCK_TAP_FRAMES = 2 * FRAMES_PER_SECOND;
+const GAME_OVER_MAX_FRAMES = 8 * FRAMES_PER_SECOND;
 
 enum State {
     GAME_START,
     LEVEL_START,
     WAITING_FOR_BUFFER_TO_IMAGE,
     PLAYING,
+    SUCCESS,
+    GAME_OVER_BLOCKING_TAP,
     GAME_OVER,
 }
 
@@ -48,6 +54,7 @@ let shipX = 0;
 let shipY = 0;
 let shipYA = 0;
 let tapPressed = false;
+let counter = 0;
 
 const updatePixelRatio = () => {
     if (removeMediaEventListener !== null) {
@@ -68,6 +75,8 @@ const updatePixelRatio = () => {
 
 export function enter() {
     exiting = false;
+
+    document.body.style.backgroundColor = '#C2BCB1';
 
     window.addEventListener('resize', windowResized);
     window.addEventListener('touchmove', onTouchMove, { passive: false });
@@ -100,6 +109,8 @@ export function enter() {
 
 export function exit() {
     exiting = true;
+    stopAnimation();
+    releaseWakeLock();
     window.removeEventListener('resize', windowResized);
     window.removeEventListener('touchmove', onTouchMove);
     document.removeEventListener('visibilitychange', onVisibilityChanged);
@@ -117,7 +128,6 @@ export function exit() {
     keysPressed.clear();
     touchPressed.clear();
     mouseButtonsPressed.clear();
-    releaseWakeLock();
 }
 
 function onTouchMove(e: TouchEvent) {
@@ -134,6 +144,12 @@ export function update() {
             break;
         case State.PLAYING:
             updatePlaying();
+            break;
+        case State.SUCCESS:
+            updateSuccess();
+            break;
+        case State.GAME_OVER_BLOCKING_TAP:
+            updateGameOverBlockingTap();
             break;
         case State.GAME_OVER:
             updateGameOver();
@@ -176,18 +192,37 @@ function updatePlaying() {
         state = State.WAITING_FOR_BUFFER_TO_IMAGE;
         convertBufferToImage().then(image => {
             caveImage = image;
-            state = State.GAME_OVER;
+            state = State.GAME_OVER_BLOCKING_TAP;
+            counter = GAME_OVER_BLOCK_TAP_FRAMES;
         });
     } else if (shipX >= 303) {
         ++level;
         minStalactiteHeight += 2;
         playSoundEffect('sfx/success.mp3');
+        state = State.SUCCESS;
+        counter = SUCCESS_FRAMES;
+    }
+}
+
+function updateSuccess() {
+    if (--counter === 0) {
         updateLevelStart();
     }
 }
 
-function updateGameOver() {
+function updateGameOverBlockingTap() {
+    if (--counter === 0) {
+        counter = GAME_OVER_MAX_FRAMES;
+        state = State.GAME_OVER;
+    }
+}
 
+function updateGameOver() {
+    if (--counter === 0 || tapPressed) {
+        tapPressed = false;
+        exit();
+        enterStart();
+    }
 }
 
 export function render() {
@@ -236,7 +271,8 @@ async function createCaveImage() {
 }
 
 function onTap() {
-    if (state == State.PLAYING && keysPressed.size === 0 && touchPressed.size === 0 && mouseButtonsPressed.size === 0) {
+    if ((state == State.PLAYING || state == State.GAME_OVER) && keysPressed.size === 0 && touchPressed.size === 0
+            && mouseButtonsPressed.size === 0) {
         tapPressed = true;
     }
 }
