@@ -1,5 +1,6 @@
 import { init as initGame, enter as enterGame, exit as exitGame } from "./game";
 import { enter as enterStart, exit as exitStart } from "./start";
+import { enter as enterProgress, exit as exitProgress } from "./progress";
 
 
 async function init() {
@@ -20,7 +21,9 @@ async function init() {
     // await initGame();
     // enterGame();
 
-    enterStart();
+    // enterStart();
+
+    enterProgress();
 }
 
 document.addEventListener('DOMContentLoaded', init);

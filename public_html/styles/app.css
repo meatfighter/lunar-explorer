@@ -147,3 +147,36 @@ button:disabled:active {
 button:focus {
     outline: none;
 }
+
+#progress-div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#loading-progress {
+    width: 300px;
+    border: none;
+    height: 8px;
+    border-radius: 4px;
+    color: #0075FF;
+    background: #CCCCCC;
+    -webkit-appearance: none;
+}
+
+#loading-progress::-webkit-progress-bar {
+    background-color: #CCCCCC;
+    border-radius: 4px;
+}
+
+#loading-progress::-webkit-progress-value {
+    background-color: #0075FF;
+    border-radius: 4px;
+}
+
+#loading-progress::-moz-progress-bar {
+    background: #0075FF;
+    border-radius: 4px;
+}
