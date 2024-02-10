@@ -1,4 +1,4 @@
-import { startAnimation, stopAnimation } from "./animate";
+import { startAnimation, stopAnimation } from './animate';
 import {
     cls,
     Color,
@@ -12,9 +12,11 @@ import {
     point,
     print,
     Resolution
-} from "./buffer-graphics";
-import { acquireWakeLock, releaseWakeLock } from "./wake-lock";
-import { NoParamVoidFunc } from "./no-param-void-func";
+} from './buffer-graphics';
+import { acquireWakeLock, releaseWakeLock } from './wake-lock';
+import { NoParamVoidFunc } from './no-param-void-func';
+import { enter as enterStart } from './start';
+import {playSoundEffect} from "./sfx";
 
 enum State {
     GAME_START,
@@ -64,12 +66,6 @@ const updatePixelRatio = () => {
     windowResized();
 };
 
-export async function init() {
-    cls();
-    draw('BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1');
-    shipImage = await get(0, 0, 16, 8);
-}
-
 export function enter() {
     exiting = false;
 
@@ -93,8 +89,13 @@ export function enter() {
 
     updatePixelRatio();
 
-    state = State.GAME_START;
-    startAnimation();
+    cls();
+    draw('BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1');
+    get(0, 0, 16, 8).then(image => {
+        shipImage = image;
+        state = State.GAME_START;
+        startAnimation();
+    });
 }
 
 export function exit() {
@@ -159,9 +160,9 @@ function updatePlaying() {
     if (tapPressed) {
         tapPressed = false;
         --shipYA;
+        playSoundEffect('sfx/boost.mp3');
     } else {
         shipYA += 0.4;
-        // TODO PLAY SOUND EFFECT
     }
     shipX++;
     shipY += shipYA;
@@ -171,16 +172,16 @@ function updatePlaying() {
             || point(shipX + 8, shipY + 9) === Color.BROWN) {
         locate(10, 15);
         print('GAME OVER');
+        playSoundEffect('sfx/crash.mp3');
         state = State.WAITING_FOR_BUFFER_TO_IMAGE;
         convertBufferToImage().then(image => {
             caveImage = image;
             state = State.GAME_OVER;
         });
-        // TODO SOUND EFFECT
-        // TODO RENDER GAME OVER
     } else if (shipX >= 303) {
         ++level;
         minStalactiteHeight += 2;
+        playSoundEffect('sfx/success.mp3');
         updateLevelStart();
     }
 }
@@ -235,13 +236,9 @@ async function createCaveImage() {
 }
 
 function onTap() {
-    if (state != State.PLAYING || keysPressed.size !== 0 || touchPressed.size !== 0 || mouseButtonsPressed.size !== 0) {
-        return;
+    if (state == State.PLAYING && keysPressed.size === 0 && touchPressed.size === 0 && mouseButtonsPressed.size === 0) {
+        tapPressed = true;
     }
-
-    tapPressed = true;
-
-    // TODO SOUND EFFECT
 }
 
 function onKeyDown(e: KeyboardEvent) {

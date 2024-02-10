@@ -1,7 +1,12 @@
-let volume = 10;
+import { getVolume, setVolume } from "./sfx";
+import { enter as enterGame } from "./game";
+
+let volume = 0;
 let landscape = false;
 
 export function enter() {
+    volume = getVolume();
+
     window.addEventListener('resize', windowResized);
     window.addEventListener('touchmove', onTouchMove, { passive: false });
 
@@ -21,6 +26,9 @@ export function enter() {
     const volumeInput = document.getElementById('volume-input') as HTMLInputElement;
     volumeInput.addEventListener('input', volumeChanged);
 
+    const startButton = document.getElementById('start-button') as HTMLButtonElement;
+    startButton.addEventListener('click', startButtonClicked);
+
     windowResized();
 }
 
@@ -30,6 +38,15 @@ export function exit() {
 
     const volumeInput = document.getElementById('volume-input') as HTMLInputElement;
     volumeInput.removeEventListener('input', volumeChanged);
+
+    const startButton = document.getElementById('start-button') as HTMLButtonElement;
+    startButton.removeEventListener('click', startButtonClicked);
+}
+
+function startButtonClicked() {
+    setVolume(volume);
+    exit();
+    enterGame();
 }
 
 function onTouchMove(e: TouchEvent) {
