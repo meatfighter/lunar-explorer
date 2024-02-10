@@ -6,7 +6,8 @@
 }
 
 body {
-    background-color: #C2BCB1;
+    /*background-color: #C2BCB1;*/
+    background-color: #1E1F22;
     color: #FFFFFF;
     margin: 0;
     padding: 0;
@@ -24,4 +25,100 @@ body {
     image-rendering: pixelated;
     display: block;
     position: absolute;
+}
+
+/*#volume-input {*/
+/*    -webkit-appearance: none; !* Override default CSS styles for WebKit browsers *!*/
+/*    appearance: none;*/
+/*    width: 3in; !* Adjusted width *!*/
+/*    height: 8px; !* Specified height of the track *!*/
+/*    background: cornflowerblue; !* Track color *!*/
+/*    outline: none; !* Remove outline *!*/
+/*    border-radius: 10px; !* Rounded ends of the slider bar *!*/
+/*    margin: 0 auto; !* Center the slider if the page width is more than the slider width *!*/
+/*}*/
+
+/*#volume-input::-webkit-slider-thumb {*/
+/*    -webkit-appearance: none;*/
+/*    border: 3px solid white; !* White ring *!*/
+/*    height: 24px;*/
+/*    width: 24px;*/
+/*    border-radius: 50%;*/
+/*    background: gray; !* Gray circle *!*/
+/*}*/
+
+/*#volume-input::-moz-range-thumb {*/
+/*    border: 3px solid white; !* White ring *!*/
+/*    height: 18px;*/
+/*    width: 18px;*/
+/*    border-radius: 50%;*/
+/*    background: gray; !* Gray circle *!*/
+/*}*/
+
+/*!* For browsers that support it, add rounded corners to the track *!*/
+/*#volume-input::-webkit-slider-runnable-track {*/
+/*    border-radius: 10px;*/
+/*}*/
+
+/*#volume-input::-moz-range-track {*/
+/*    border-radius: 10px;*/
+/*}*/
+
+
+#volume-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25%;
+    height: 8px;
+    background: transparent;
+    border-radius: 10px;
+    margin: 0 auto;
+    position: relative; /* Required for pseudo-elements positioning */
+}
+
+#volume-input:focus {
+    outline: none;
+}
+
+/* Chrome, Safari, and newer Edge versions */
+#volume-input::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background: linear-gradient(to right, cornflowerblue 0%, cornflowerblue var(--thumb-position, 50%), gray var(--thumb-position, 50%), gray 100%);
+    border-radius: 10px;
+    height: 8px;
+}
+
+#volume-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1mm solid white;
+    height: 5mm;
+    width: 5mm;
+    border-radius: 50%;
+    background: cornflowerblue;
+    cursor: pointer;
+    margin-top: -1.5mm; /* Adjust this value as needed */
+    position: relative;
+    z-index: 2; /* Make sure the thumb is above the pseudo-element */
+}
+
+/* Firefox */
+#volume-input::-moz-range-track {
+    background: gray;
+    border-radius: 10px;
+    height: 8px;
+}
+
+#volume-input::-moz-range-progress {
+    background: cornflowerblue;
+    border-radius: 10px;
+    height: 8px;
+}
+
+#volume-input::-moz-range-thumb {
+    -moz-appearance: none;
+    border: 1mm solid white;
+    height: 5mm;
+    width: 5mm;
+    border-radius: 50%;
+    background: cornflowerblue;
 }

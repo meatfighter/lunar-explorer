@@ -20,7 +20,21 @@
     <title>Lunar Explorer</title>
 </head>
 <body>
-<main id="main-content"></main>
-<script type="module" src="scripts/app.bundle.js?v=2024-02-02"></script>
+<main id="main-content">
+    <input type="range" id="volume-input" min="0" max="1" step="any" value="0.1">
+    <label for="volume-input">Volume</label>
+
+
+
+</main>
+<!--<script type="module" src="scripts/app.bundle.js?v=2024-02-02"></script>-->
+
+<script>
+    const volumeInput = document.getElementById('volume-input');
+    volumeInput.addEventListener('input', function() {
+        const value = (this.value - this.min) / (this.max - this.min) * 100;
+        this.style.setProperty('--thumb-position', `${value}%`);
+    });
+</script>
 </body>
 </html>
