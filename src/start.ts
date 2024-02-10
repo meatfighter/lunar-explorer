@@ -72,6 +72,20 @@ function volumeChanged() {
         volume = Math.floor(value);
     }
 
+    if (volume === 0) {
+        leftVolumeSpan.textContent = '\u{1F507}';
+        leftVolumeSpan.style.transform = '';
+    } else {
+        leftVolumeSpan.style.transform = 'scaleX(-1)';
+        if (volume < 33) {
+            leftVolumeSpan.textContent = '\u{1F568}';
+        } else if (volume < 66) {
+            leftVolumeSpan.textContent = '\u{1F569}';
+        } else {
+            leftVolumeSpan.textContent = '\u{1F56A}';
+        }
+    }
+
     rightVolumeSpan.textContent = String(volume);
 }
 
@@ -88,11 +102,21 @@ function windowResized() {
     landscape = (innerWidth >= innerHeight);
     startDiv.style.display = 'flex';
 
+    leftVolumeSpan.style.width = '';
+    leftVolumeSpan.style.display = 'inline-block';
+    leftVolumeSpan.style.textAlign = 'center';
+    leftVolumeSpan.textContent = '\u{1F507}';
+    leftVolumeSpan.style.transform = '';
+
     rightVolumeSpan.style.width = '';
     rightVolumeSpan.style.display = 'inline-block';
     rightVolumeSpan.style.textAlign = 'center';
     rightVolumeSpan.textContent = '100';
+
     if (landscape) {
+        const leftVolumeSpanWidth = leftVolumeSpan.getBoundingClientRect().width;
+        leftVolumeSpan.style.width = `${leftVolumeSpanWidth}px`;
+
         const rightVolumeSpanWidth = rightVolumeSpan.getBoundingClientRect().width;
         rightVolumeSpan.style.width = `${rightVolumeSpanWidth}px`;
 
@@ -100,6 +124,9 @@ function windowResized() {
         startDiv.style.left = `${(innerWidth - rect.width) / 2}px`
         startDiv.style.top = `${(innerHeight - rect.height) / 2}px`;
     } else {
+        const leftVolumeSpanHeight = leftVolumeSpan.getBoundingClientRect().height;
+        leftVolumeSpan.style.width = `${leftVolumeSpanHeight}px`;
+
         const rightVolumeSpanHeight = rightVolumeSpan.getBoundingClientRect().height;
         rightVolumeSpan.style.width = `${rightVolumeSpanHeight}px`;
 
@@ -109,4 +136,6 @@ function windowResized() {
         startDiv.style.top = `${(innerHeight - rect.width) / 2}px`;
     }
     rightVolumeSpan.textContent = String(volume);
+
+    volumeChanged();
 }

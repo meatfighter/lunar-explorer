@@ -107,7 +107,6 @@ body, button, input, select, textarea {
     display: inline-block;
     margin-right: 10px;
     font-size: 24px;
-    transform: scaleX(-1);
 }
 
 .right-volume-label {
