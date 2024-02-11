@@ -52,7 +52,7 @@ let level = 0;
 let minStalactiteHeight = 0;
 let shipX = 0;
 let shipY = 0;
-let shipYA = 0;
+let shipVy = 0;
 let tapPressed = false;
 let counter = 0;
 
@@ -166,7 +166,7 @@ function updateGameStart() {
 function updateLevelStart() {
     shipX = 1;
     shipY = 30;
-    shipYA = 0;
+    shipVy = 0;
     tapPressed = false;
     state = State.WAITING_FOR_BUFFER_TO_IMAGE;
     createCaveImage().then(() => state = State.PLAYING);
@@ -175,13 +175,13 @@ function updateLevelStart() {
 function updatePlaying() {
     if (tapPressed) {
         tapPressed = false;
-        --shipYA;
+        --shipVy;
         playSoundEffect('sfx/boost.mp3');
     } else {
-        shipYA += 0.4;
+        shipVy += 0.4;
     }
     shipX++;
-    shipY += shipYA;
+    shipY += shipVy;
 
     if (point(shipX + 17, shipY + 6) === Color.BROWN
             || point(shipX + 9, shipY - 1) === Color.BROWN
@@ -235,7 +235,10 @@ export function render() {
     }
 
     ctx.drawImage(caveImage, 0, 0);
-    ctx.drawImage(shipImage, Math.floor(shipX), Math.floor(shipY));
+
+    if (state !== State.GAME_OVER_BLOCKING_TAP && state !== State.GAME_OVER) {
+        ctx.drawImage(shipImage, Math.floor(shipX), Math.floor(shipY));
+    }
 }
 
 async function createCaveImage() {
