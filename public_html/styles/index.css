@@ -6,8 +6,8 @@
 }
 
 body {
-    background-color: #1E1F22;
-    color: #B5B5B5;
+    background-color: #0D1117;
+    color: #E6EDF3;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
     max-width: 978px;
@@ -149,25 +149,29 @@ pre.code {
     font-family: 'Source Code Pro', monospace;
     font-size: 16px;
     line-height: normal;
-    background-color: #252527;
-    color: #F8F8F2;
-    border: 1px solid #3A3A3C;
-    border-radius: 5px;
+    background-color: #161B22;
+    color: #E6EDF3;
     padding: 15px 15px 15px 15px;
-    max-width: 375px;
     width: 100%;
+    max-width: 978px;
+    overflow-x: auto;
+    white-space: pre;
 }
 
-pre.ts {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 16px;
-    line-height: normal;
-    background-color: #252527;
-    color: #F8F8F2;
-    border: 1px solid #3A3A3C;
-    border-radius: 5px;
-    padding: 15px 15px 15px 15px;
-    width: 100%;
+.func {
+    color: #D2A8FF;
+}
+
+.keyword {
+    color: #FF7B72;
+}
+
+.str {
+    color: #A5D6FF;
+}
+
+.num {
+    color: #79C0FF;
 }
 
 code {

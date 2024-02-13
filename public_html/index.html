@@ -103,11 +103,7 @@
 <p>After that, the program renders the player&rsquo;s ship in the upper-left corner of the screen via a <code>DRAW</code> statement:</p>
 
 <pre class="code">
-60   DRAW"BM0,6C12R16L1H1L
-     12D2C4R12L1G1L8BL1BU4C
-     11R10H1L8U1R8H1L6R1E1R2
-     D1C15R1D1R1D1BD1BL3C3L
-     3U1F1U1E1"
+60   DRAW"BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1"
 </pre>
 
 <p><code>DRAW</code> executes a &ldquo;graphics definition language&rdquo; program, a sequence of one or two letter commands, each followed by one or two numerical parameters, that directs a single-pixel cursor to plot a colored path. The following commands move the cursor n pixels along an axis-aligned line:</p>
@@ -172,8 +168,7 @@
 
 ...
 
-520  DATA 260,20,290,90,320,90,320,
-     110,290,110,270,180,70,180,0,199
+520  DATA 260,20,290,90,320,90,320,110,290,110,270,180,70,180,0,199
 </pre>
 
 <p>Cartridge BASIC does not provide a way to reposition the single-pixel cursor without drawing. Instead, <span class="nowrap">line 100</span> renders the initial segment in color <code>6</code> (brown). From there, a for-loop reads coordinate pairs from a DATA statement, and it uses the line-to variant of the LINE statement to successively extend the path, again in color <code>6</code>. Notably, two endpoints are one pixel beyond the screen&rsquo;s right edge, which breaks the ceiling and floor into disjoint regions:</p>
@@ -251,17 +246,13 @@
 
 <pre class="code">
 300  K$=INKEY$
-310  IF K$="" THEN
-     YAD=YAD+.4:GOTO 350
+310  IF K$="" THEN YAD=YAD+.4:GOTO 350
 320  YAD=YAD-1
 330  NOISE 4,8,.5
 340  NOISE 4,4,.5
 350  PUT(X,Y),S:X=X+1
 360  Y=Y+YAD
-370  IF POINT(X+17,Y+6)=6 OR
-     POINT(X+9,Y-1)=6 OR
-     POINT(X+8,Y+9)=6 THEN
-     430
+370  IF POINT(X+17,Y+6)=6 OR POINT(X+9,Y-1)=6 OR POINT(X+8,Y+9)=6 THEN 430
 380  PUT(X,Y),S
 390  IF X<>303 THEN GOTO 300
 </pre>
@@ -272,7 +263,7 @@
 
 <p>If there is no input, the program increases the ship&rsquo;s horizontal velocity by 0.4 to simulate acceleration due to gravity. Otherwise, the program decreases the ship&rsquo;s horizontal velocity by one and it emits a sound effect reminiscent of a short jet blast, suggesting a momentary release of thrust.</p>
 
-<p>The <code>NOISE</code> statement invokes the noise generator of the Texas Instruments <a href="https://en.wikipedia.org/wiki/Texas_Instruments_SN76489">SN76496</a> chip. The first parameter asserts the generation frequency and the noise type: periodic or white. The argument <code>4</code> means white noise at the NTSC colorburst frequency <spanc class="nowrap">(315/88 MHz)</span> divided by 512. The second parameter is the volume (0&ndash;15). The third parameter is the duration specified in system timer ticks at the default frequency of the Programmable Interval Timer <span class="nowrap">(18.2 ticks/sec)</span>, which gets delivered to the interpreter by a handler hooked to BIOS interrupt <code>8h</code>. The value <code>0.5</code> gets rounded to one tick. In summary, that pair of <code>NOISE</code> statements produces a high-pitched white noise that lasts about a tenth of a second with decreasing volume.</p>
+<p>The <code>NOISE</code> statement invokes the noise generator of the Texas Instruments <a href="https://en.wikipedia.org/wiki/Texas_Instruments_SN76489">SN76496</a> chip. The first parameter asserts the generation frequency and the noise type: periodic or white. The argument <code>4</code> means white noise at the NTSC colorburst frequency <span class="nowrap">(315/88 MHz)</span> divided by 512. The second parameter is the volume (0&ndash;15). The third parameter is the duration specified in system timer ticks at the default frequency of the Programmable Interval Timer <span class="nowrap">(18.2 ticks/sec)</span>, which gets delivered to the interpreter by a handler hooked to BIOS interrupt <code>8h</code>. The value <code>0.5</code> gets rounded to one tick. In summary, that pair of <code>NOISE</code> statements produces a high-pitched white noise that lasts about a tenth of a second with decreasing volume.</p>
 
 <p>The TypeScript port plays sound effects sampled from <span class="nowrap">PC-BASIC</span> (more on this later).</p>
 
@@ -291,8 +282,7 @@
 <p>The final line continues the game loop if the player has yet to reach the right side of the screen. Else, the player is rewarded for passing the level with a sound effect provided by a <code>PLAY</code> statement:</p>
 
 <pre class="code">
-400  PLAY"T255L64MLO0
-     V15EFEF"
+400  PLAY"T255L64MLO0V15EFEF"
 </pre>
 
 <p><code>PLAY</code> expects a &ldquo;tune definition language&rdquo; program, a string containing a sequence of single and double letter commands and numerical arguments. Here are the commands used on <span class="nowrap">line 400</span>:</p>
@@ -334,8 +324,7 @@
 480  PRINT "PLAY AGAIN? Y/N"
 490  INPUT A$
 500  IF A$="N" THEN 530
-510  RM=1:CLS:RESTORE:XB=40:
-     GOTO 100
+510  RM=1:CLS:RESTORE:XB=40:GOTO 100
 </pre>
 
 <p>The crash sound effect is produced by three <code>NOISE</code> statements. The argument 6 indicates white noise at the NTSC colorburst frequency <span class="nowrap">(315/88 MHz)</span> divided by 2048. Collectively, the statements produce low-pitched white noise that rises and then diminishes in volume for about a sixth of a second.</p>
@@ -353,72 +342,64 @@
 
 <p>As revealed below, the TypeScript port implements the BASIC statements used in <i>Lunar Explorer</i> as functions to accurately reproduce the game. It leverages <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a> for the line function and the <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill algorithm</a> for the <code>paint</code> function. The <code>draw</code> function contains a &ldquo;graphics definition language&rdquo; interpreter. All of them render to a <span class="nowrap">320&times;200 pixel</span> back buffer that gets transferred to the display.</p>
 
-    <pre class="code">
-60   DRAW"BM0,6C12R16L1H1L
-     12D2C4R12L1G1L8BL1BU4C
-     11R10H1L8U1R8H1L6R1E1R2
-     D1C15R1D1R1D1BD1BL3C3L
-     3U1F1U1E1"
-</pre>
-
-<pre class="ts">
-cls();
-draw('BM0,6C12R16L1H1L1<wbr>2D2C4R12L1G1L8BL1BU4C<wbr>11R10H1L8U1R8H1L6R1E1R2<wbr>D1C15R1D1R1D1BD1BL3C3L<wbr>3U1F1U1E1');
-get(0, 0, 16, 8).then(...);
+<pre class="code">
+<span class="func">cls</span>();
+<span class="func">draw</span>(<span class="str">'BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1'</span>);
+<span class="func">get</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">16</span>, <span class="num">8</span>).<span class="func">then</span>(...);
 
 ...
 
-cls();
+<span class="func">cls</span>();
 
 // Draw cave floor and ceiling.
-line(0, 0, 60, 20, 6);
-for (let i = 0; i < caveXYs.length; i += 2) {
-    line(caveXYs[i], caveXYs[i + 1], Color.BROWN);
+<span class="func">line</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">60</span>, <span class="num">20</span>, <span class="num">6</span>);
+<span class="keyword">for</span> (<span class="keyword">let</span> i <span class="num">= 0</span>; i <span class="num">&lt;</span> caveXYs.length; i <span class="num">+= 2</span>) {
+    <span class="func">line</span>(caveXYs[i], caveXYs[i <span class="num">+ 1</span>], Color.<span class="num">BROWN</span>);
 }
-paint(160, 10, Color.BROWN, Color.BROWN);
-paint(160, 190, Color.BROWN, Color.BROWN);
+<span class="func">paint</span>(<span class="num">160</span>, <span class="num">10</span>, Color.<span class="num">BROWN</span>, Color.<span class="num">BROWN</span>);
+<span class="func">paint</span>(<span class="num">160</span>, <span class="num">190</span>, Color.<span class="num">BROWN</span>, Color.<span class="num">BROWN</span>);
 
-for (let x = 60; x <= 240; x += 20) {
+<span class="keyword">for</span> (<span class="keyword">let</span> x <span class="num">= 60</span>; x <span class="num">&lt;= 240</span>; x <span class="num">+= 20</span>) {
 
     // Draw stalactite with random height based on the level.
-    let y = Math.floor(Math.random() * 43 + 1) + minStalactiteHeight;
-    line(x, 20, x + 10, y, Color.BROWN);
-    line(x + 20, 20, Color.BROWN);
-    paint(x + 10, 22, Color.BROWN, Color.BROWN);
+    <span class="keyword">let</span> y = Math.<span class="func">floor</span>(Math.<span class="func">random</span>() <span class="num">* 43 + 1</span>) <span class="num">+</span> minStalactiteHeight;
+    <span class="func">line</span>(x, <span class="num">20</span>, x <span class="num">+ 10</span>, y, Color.<span class="num">BROWN</span>);
+    <span class="func">line</span>(x <span class="num">+ 20</span>, <span class="num">20</span>, Color.<span class="num">BROWN</span>);
+    <span class="func">paint</span>(x <span class="num">+ 10</span>, <span class="num">22</span>, Color.<span class="num">BROWN</span>, Color.<span class="num">BROWN</span>);
 
     // Draw stalagmite with random height based on the level.
-    y = Math.floor(Math.random() * 50 + 1) + 100;
-    line(x + 10, 180, x + 20, y, Color.BROWN);
-    line(x + 30, 180, Color.BROWN);
-    paint(x + 20, 178, Color.BROWN, Color.BROWN);
+    y = Math.<span class="func">floor</span>(Math.<span class="func">random</span>() <span class="num">* 50 + 1</span>) <span class="num">+ 100</span>;
+    <span class="func">line</span>(x <span class="num">+ 10</span>, <span class="num">180</span>, x <span class="num">+ 20</span>, y, Color.<span class="num">BROWN</span>);
+    <span class="func">line</span>(x <span class="num">+ 30</span>, <span class="num">180</span>, Color.<span class="num">BROWN</span>);
+    <span class="func">paint</span>(x <span class="num">+ 20</span>, <span class="num">178</span>, Color.<span class="num">BROWN</span>, Color.<span class="num">BROWN</span>);
 }
 
-locate(1, 10);
-print(`LEVEL ${level} `);
+<span class="func">locate</span>(<span class="num">1</span>, <span class="num">10</span>);
+<span class="func">print</span>(<span class="str">`LEVEL </span>${level}<span class="str"> `</span>);
 
 ...
 
-if (tapPressed) {
-    tapPressed = false;
-    --shipVy;
-    playSoundEffect('sfx/boost.mp3');
+<span class="keyword">if</span> (tapPressed) {
+    tapPressed<span class="num"> = false</span>;
+    <span class="num">--</span>shipVy;
+    <span class="func">playSoundEffect</span>(<span class="str">'sfx/boost.mp3'</span>);
 } else {
-    shipVy += 0.4;
+    shipVy <span class="num">+= 0.4</span>;
 }
-shipX++;
-shipY += shipVy;
+shipX<span class="num">++</span>;
+shipY <span class="num">+=</span> shipVy;
 
-if (point(shipX + 17, shipY + 6) === Color.BROWN
-        || point(shipX + 9, shipY - 1) === Color.BROWN
-        || point(shipX + 8, shipY + 9) === Color.BROWN) {
-    locate(10, 15);
-    print('GAME OVER');
-    playSoundEffect('sfx/crash.mp3');
+<span class="keyword">if</span> (<span class="func">point</span>(shipX<span class="num"> + 17</span>, shipY<span class="num"> + 6</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>
+        || <span class="func">point</span>(shipX<span class="num"> + 9</span>, shipY<span class="num"> - 1</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>
+        || <span class="func">point</span>(shipX<span class="num"> + 8</span>, shipY<span class="num"> + 9</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>) {
+    <span class="func">locate</span>(<span class="num">10</span>, <span class="num">15</span>);
+    <span class="func">print</span>(<span class="str">'GAME OVER'</span>);
+    <span class="func">playSoundEffect</span>(<span class="str">'sfx/crash.mp3'</span>);
     ...
-} else if (shipX >= 303) {
-    ++level;
-    minStalactiteHeight += 2;
-    playSoundEffect('sfx/success.mp3');
+} <span class="keyword">else if</span> (shipX<span class="num"> &gt;= 303</span>) {
+    <span class="num">++</span>level;
+    minStalactiteHeight <span class="num">+= 2</span>;
+    <span class="func">playSoundEffect</span>(<span class="str">'sfx/success.mp3'</span>);
     ...
 }
 </pre>
@@ -439,8 +420,7 @@ pcbasic --preset=pcjr
 <p>But <span class="nowrap">PC-BASIC</span> interprets code much faster than a real PCjr. The only way to slow down the program is to introduce a delay in the game loop:</p>
 
 <pre class="code">
-385  T = TIMER:WHILE T = TIMER:WEND:
-     T = TIMER:WHILE T = TIMER:WEND
+385  T = TIMER:WHILE T = TIMER:WEND:T = TIMER:WHILE T = TIMER:WEND
 </pre>
 
 <p>That line uses the aforementioned <code>TIMER</code> variable, which updates approximately every 55 ms. The delay slows the game down to about <span class="nowrap">9 frames/sec</span>. The TypeScript port runs at <span class="nowrap">10 frames/sec</span>. At the time of this writing, it is unknown exactly what rate the game runs on an actual PCjr.</p>
