@@ -14,7 +14,8 @@ export function enter() {
     mainElement.innerHTML = `
             <div id="start-div">
                 <div class="volume-div">
-                    <span class="left-volume-label" id="left-volume-span" lang="en">&#x1F56A;</span>
+                    <span class="left-volume-label material-symbols-outlined" id="left-volume-span" 
+                            lang="en">volume_mute</span>
                     <input type="range" id="volume-input" min="0" max="100" step="any" value="10">
                     <span class="right-volume-label" id="right-volume-span" lang="en">100</span>
                 </div>
@@ -82,17 +83,13 @@ function volumeChanged() {
     volumeInput.style.setProperty('--thumb-position', `${volume}%`);
 
     if (volume === 0) {
-        leftVolumeSpan.textContent = '\u{1F507}';
-        leftVolumeSpan.style.transform = '';
+        leftVolumeSpan.textContent = 'no_sound';
+    } else if (volume < 33) {
+        leftVolumeSpan.textContent = 'volume_mute';
+    } else if (volume < 66) {
+        leftVolumeSpan.textContent = 'volume_down';
     } else {
-        leftVolumeSpan.style.transform = 'scaleX(-1)';
-        if (volume < 33) {
-            leftVolumeSpan.textContent = '\u{1F568}';
-        } else if (volume < 66) {
-            leftVolumeSpan.textContent = '\u{1F569}';
-        } else {
-            leftVolumeSpan.textContent = '\u{1F56A}';
-        }
+        leftVolumeSpan.textContent = 'volume_up';
     }
 
     rightVolumeSpan.textContent = String(Math.round(volume));
