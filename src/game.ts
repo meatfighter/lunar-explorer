@@ -17,7 +17,6 @@ import { acquireWakeLock, releaseWakeLock } from './wake-lock';
 import { NoParamVoidFunc } from './no-param-void-func';
 import { enter as enterStart } from './start';
 import { playSoundEffect } from "./sfx";
-import { requestFullscreen, exitFullscreen } from './fullscreen';
 
 const SUCCESS_FRAMES = FRAMES_PER_SECOND;
 const GAME_OVER_BLOCK_TAP_FRAMES = FRAMES_PER_SECOND;
@@ -97,7 +96,6 @@ export function enter() {
             height="${Resolution.HEIGHT}"></canvas>`;
     canvas = document.getElementById("lunar-canvas") as HTMLCanvasElement;
 
-    requestFullscreen();
     updatePixelRatio();
 
     cls();
@@ -112,7 +110,6 @@ export function enter() {
 export function exit() {
     exiting = true;
     stopAnimation();
-    exitFullscreen();
     releaseWakeLock();
     window.removeEventListener('resize', windowResized);
     window.removeEventListener('touchmove', onTouchMove);
@@ -387,6 +384,8 @@ function windowResized() {
     ctx.setTransform(transform);
 
     render();
+
+    setTimeout(() => window.scrollTo(0, 1), 0); // hide the address bar
 }
 
 function onVisibilityChanged() {

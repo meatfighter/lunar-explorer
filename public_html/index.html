@@ -30,7 +30,7 @@
 
 <h1>About</h1>
 
-<p>Before <i>Geometry Dash</i>, before <i>Flappy Bird</i>, before the myriad of other single-button diversions, there was <i>Lunar Explorer</i>, a type-in game published in the <a href="https://archive.org/details/321aug87/page/n36/mode/1up">August 1987 issue</a> of <i>3-2-1 Contact</i> magazine that was written in the BASIC programming language by Brandon Tibbets, a high school junior from West Hartford, Connecticut. His game challenges the player to maneuver a spacecraft through a cave bristling with sharp rocks by tapping just one button. This article describes how his code works and it provides a TypeScript port playable in the browser.</p>
+<p>Before <i>Geometry Dash</i>, before <i>Flappy Bird</i>, before the myriad of other single-button diversions, there was <span class="nowrap"><i>Lunar Explorer</i></span>, a type-in game published in the <a href="https://archive.org/details/321aug87/page/n36/mode/1up">August 1987 issue</a> of <i>3-2-1 Contact</i> magazine that was written in the BASIC programming language by Brandon Tibbets, a high school junior from West Hartford, Connecticut. His game challenges the player to maneuver a spacecraft through a cave bristling with sharp rocks by tapping just one button. This article describes how his code works and it provides a TypeScript port playable in the browser.</p>
 
 <button class="button" id="playButton">Play</button>
 
@@ -43,7 +43,7 @@
 
 <p><img class="centered" id="321aug87_0036.jpg" src="321aug87_0036.jpg" alt="August 1987 issue of 3-2-1 Contact magazine, page 35"></p>
 
-<p><i>Lunar Explorer</i> is listed below an illustration of a rocket ship blasting through a cave, an image designed to entice the reader to type in the code. Without a screenshot of actual gameplay, the reader is left in suspense until completing that grueling process.</p>
+<p><span class="nowrap"><i>Lunar Explorer</i></span> is listed below an illustration of a rocket ship blasting through a cave, an image designed to entice the reader to type in the code. Without a screenshot of actual gameplay, the reader is left in suspense until completing that grueling process.</p>
 
 <p>The PCjr originally sold with either 64 or <span class="nowrap">128 KB</span> of RAM. Although the magazine asserts the game is compatible with both a <span class="nowrap">128 KB</span> PCjr and a PC equipped with a CGA card, the program employs the superior graphics and sound capabilities exclusive to the PCjr, and it uses commands only found in Cartridge BASIC, a BASIC dialect unique to the PCjr.</p>
 
@@ -60,7 +60,7 @@
 
 <p>That statement only works when Cartridge BASIC is launched from DOS (by executing <code>BASICA</code>) because it depends on the DOS API (software interrupt <code>21h</code>, service <code>2Ch</code>). Additionally, since the PCjr lacks a CMOS battery, TIMER provides seconds from midnight only if the user manually adjusted the clock, a process routinely done at power on.</p>
 
-<p>The PCjr does not have dedicated video RAM. Instead, a program reserves a page of the first <span class="nowrap">128 KB</span> of primary memory to serve as the buffer that backs the video display. By default, Cartridge BASIC allocates a <span class="nowrap">16 KB</span> page at the top of memory. But <i>Lunar Explorer</i> uses an enhanced CGA mode that requires <span class="nowrap">32 KB</span>. Before it enters that mode, it clears the screen with <code>CLS</code> and then it expands the video page to <span class="nowrap">32 KB</span> with the <code>CLEAR</code> command:</p>
+<p>The PCjr does not have dedicated video RAM. Instead, a program reserves a page of the first <span class="nowrap">128 KB</span> of primary memory to serve as the buffer that backs the video display. By default, Cartridge BASIC allocates a <span class="nowrap">16 KB</span> page at the top of memory. But <span class="nowrap"><i>Lunar Explorer</i></span> uses an enhanced CGA mode that requires <span class="nowrap">32 KB</span>. Before it enters that mode, it clears the screen with <code>CLS</code> and then it expands the video page to <span class="nowrap">32 KB</span> with the <code>CLEAR</code> command:</p>
 
 <pre class="code">
 20   CLS:CLEAR ,,,32768!
@@ -106,33 +106,26 @@
 60   DRAW"BM0,6C12R16L1H1L12D2C4R12L1G1L8BL1BU4C11R10H1L8U1R8H1L6R1E1R2D1C15R1D1R1D1BD1BL3C3L3U1F1U1E1"
 </pre>
 
-<p><code>DRAW</code> executes a &ldquo;graphics definition language&rdquo; program, a sequence of one or two letter commands, each followed by one or two numerical parameters, that directs a single-pixel cursor to plot a colored path. The following commands move the cursor n pixels along an axis-aligned line:</p>
+<p><code>DRAW</code> executes a &ldquo;graphics definition language&rdquo; program, a sequence of one or two letter commands, each followed by one or two numerical parameters, that directs a single-pixel cursor to plot a colored path. The following commands move the cursor <i>n</i> pixels along an axis-aligned line:</p>
 
-    U n  Up
+<dl>
+<dt><code>U</code> <i>n</i></dt><dd>Up</dd>
+<dt><code>D</code> <i>n</i></dt><dd>Down</dd>
+<dt><code>L</code> <i>n</i></dt><dd>Left</dd>
+<dt><code>R</code> <i>n</i></dt><dd>Right</dd>
+</dl>
 
-    D n Down
+<p>The following commands move the cursor <i>n</i> pixels along a 45&deg; diagonal line:</p>
 
-    L n Left
+<dl>
+<dt><code>E</code> <i>n</i></dt><dd>Up-right</dd>
+<dt><code>F</code> <i>n</i></dt><dd>Down-right</dd>
+<dt><code>G</code> <i>n</i></dt><dd>Down-left</dd>
+<dt><code>H</code> <i>n</i></dt><dd>Up-left</dd>
+<dt><code>M</code> <i>x,y</i></dt><dd>moves the cursor to the specified coordinates.</dd>
+</dl>
 
-    R n Right
-
-<p>The following commands move the cursor <code>n</code> pixels along a 45&deg; diagonal line:</p>
-
-    E n Up-right
-
-    F n Down-right
-
-    G n Down-left
-
-    H n Up-left
-
-    M x,y moves the cursor to the specified coordinates.
-
-<p>Prefix B means move the cursor without plotting.</p>
-
-    C n sets the cursor color.
-
-<p>There are additional commands, but <i>Lunar Explorer</i>&rsquo;s single <code>DRAW</code> statement uses only those described above.</p>
+<p>The prefix <code>B</code> means move the cursor without plotting, and <code>C</code> <i>n</i> sets the cursor color. There are additional commands, but <span class="nowrap"><i>Lunar Explorer</i></span>&rsquo;s single <code>DRAW</code> statement uses only those described above.</p>
 
 <p>Here&rsquo;s the result:</p>
 
@@ -240,7 +233,7 @@
 
     [ result of bitwise ORing the mask ]
 
-<p><i>Lunar Explorer</i> does not employ that technique. But it does take advance of the default bitwise XOR operation, as explained later.</p>
+<p><span class="nowrap"><i>Lunar Explorer</i></span> does not employ that technique. But it does take advance of the default bitwise XOR operation, as explained later.</p>
 
 <p>After all that setup, the program enters the game loop:</p>
 
@@ -285,21 +278,17 @@
 400  PLAY"T255L64MLO0V15EFEF"
 </pre>
 
-<p><code>PLAY</code> expects a &ldquo;tune definition language&rdquo; program, a string containing a sequence of single and double letter commands and numerical arguments. Here are the commands used on <span class="nowrap">line 400</span>:</p>
+<p><code>PLAY</code> expects a &ldquo;tune definition language&rdquo; program, a sequence of single and double letter commands and numerical arguments. Here are the commands used on <span class="nowrap">line 400</span>:</p>
 
-    T n specifies the tempo in quarter notes per minute (32&ndash;255).
+<dl>
+<dt><code>T</code> <i>n</i></dt><dd>Tempo in quarter notes per minute (32&ndash;255)</dd>
+<dt><code>L</code> <i>n</i></dt><dd>Note length's unit fraction's denominator (1&ndash;64)</dd>
+<dt><code>ML</code></dt><dd>Music legato (notes play for the full period established by <code>L</code>)</dd>
+<dt><code>O</code> <i>n</i></dt><dd>Octave (0&ndash;6)</dd>
+<dt><code>V</code> <i>n</i></dt><dd>Volume (0&ndash;15)</dd>
+</dl>
 
-    L n specifies the fractional note length (1&ndash;64).
-
-    ML is an abbreviation for &ldquo;music legato&rdquo;. It means that each note plays for the full period established by L.
-
-    O n specifies the octave (0&ndash;6).
-
-    V n specifies the volume (0&ndash;15).
-
-    E and F are the musical notes.
-
-<p>The result is a short wavering beep.</p>
+<p><code>E</code> and <code>F</code> are the musical notes. The result is a short wavering beep.</p>
 
 <p>After the congratulatory beep, the program increments the level number by one and the stalactite height by two:</p>
 
@@ -307,7 +296,7 @@
 410  RM=RM+1:XB=XB+2
 </pre>
 
-    Then, it clears screen, it resets the DATA statement&rsquo;s read index with RESTORE, and it jumps back to <span class="nowrap">line 100</span> to draw a new random cave:
+    Then, it clears screen, it resets the <code>DATA</code> statement&rsquo;s read index with <code>RESTORE</code>, and it jumps back to <span class="nowrap">line 100</span> to draw a new random cave:
 
 <pre class="code">
 420  CLS:RESTORE:GOTO 100
@@ -340,7 +329,7 @@
 
 <h1>TypeScript Port</h1>
 
-<p>As revealed below, the TypeScript port implements the BASIC statements used in <i>Lunar Explorer</i> as functions to accurately reproduce the game. It leverages <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a> for the line function and the <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill algorithm</a> for the <code>paint</code> function. The <code>draw</code> function contains a &ldquo;graphics definition language&rdquo; interpreter. All of them render to a <span class="nowrap">320&times;200 pixel</span> back buffer that gets transferred to the display.</p>
+<p>As revealed below, the TypeScript port implements the BASIC statements used in <span class="nowrap"><i>Lunar Explorer</i></span> as functions to accurately reproduce the game. It leverages <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a> for the line function and the <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill algorithm</a> for the <code>paint</code> function. The <code>draw</code> function contains a &ldquo;graphics definition language&rdquo; interpreter. All of them render to a <span class="nowrap">320&times;200 pixel</span> back buffer that gets transferred to the display.</p>
 
 <pre class="code">
 <span class="func">cls</span>();
@@ -351,7 +340,7 @@
 
 <span class="func">cls</span>();
 
-// Draw cave floor and ceiling.
+<span class="comment">// Draw cave floor and ceiling.</span>
 <span class="func">line</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">60</span>, <span class="num">20</span>, <span class="num">6</span>);
 <span class="keyword">for</span> (<span class="keyword">let</span> i <span class="num">= 0</span>; i <span class="num">&lt;</span> caveXYs.length; i <span class="num">+= 2</span>) {
     <span class="func">line</span>(caveXYs[i], caveXYs[i <span class="num">+ 1</span>], Color.<span class="num">BROWN</span>);
@@ -361,13 +350,13 @@
 
 <span class="keyword">for</span> (<span class="keyword">let</span> x <span class="num">= 60</span>; x <span class="num">&lt;= 240</span>; x <span class="num">+= 20</span>) {
 
-    // Draw stalactite with random height based on the level.
+    <span class="comment">// Draw stalactite with random height based on the level.</span>
     <span class="keyword">let</span> y = Math.<span class="func">floor</span>(Math.<span class="func">random</span>() <span class="num">* 43 + 1</span>) <span class="num">+</span> minStalactiteHeight;
     <span class="func">line</span>(x, <span class="num">20</span>, x <span class="num">+ 10</span>, y, Color.<span class="num">BROWN</span>);
     <span class="func">line</span>(x <span class="num">+ 20</span>, <span class="num">20</span>, Color.<span class="num">BROWN</span>);
     <span class="func">paint</span>(x <span class="num">+ 10</span>, <span class="num">22</span>, Color.<span class="num">BROWN</span>, Color.<span class="num">BROWN</span>);
 
-    // Draw stalagmite with random height based on the level.
+    <span class="comment">// Draw stalagmite with random height based on the level.</span>
     y = Math.<span class="func">floor</span>(Math.<span class="func">random</span>() <span class="num">* 50 + 1</span>) <span class="num">+ 100</span>;
     <span class="func">line</span>(x <span class="num">+ 10</span>, <span class="num">180</span>, x <span class="num">+ 20</span>, y, Color.<span class="num">BROWN</span>);
     <span class="func">line</span>(x <span class="num">+ 30</span>, <span class="num">180</span>, Color.<span class="num">BROWN</span>);
@@ -390,8 +379,8 @@ shipX<span class="num">++</span>;
 shipY <span class="num">+=</span> shipVy;
 
 <span class="keyword">if</span> (<span class="func">point</span>(shipX<span class="num"> + 17</span>, shipY<span class="num"> + 6</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>
-        || <span class="func">point</span>(shipX<span class="num"> + 9</span>, shipY<span class="num"> - 1</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>
-        || <span class="func">point</span>(shipX<span class="num"> + 8</span>, shipY<span class="num"> + 9</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>) {
+        <span class="num">||</span> <span class="func">point</span>(shipX<span class="num"> + 9</span>, shipY<span class="num"> - 1</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>
+        <span class="num">||</span> <span class="func">point</span>(shipX<span class="num"> + 8</span>, shipY<span class="num"> + 9</span>) <span class="num">===</span> Color.<span class="num">BROWN</span>) {
     <span class="func">locate</span>(<span class="num">10</span>, <span class="num">15</span>);
     <span class="func">print</span>(<span class="str">'GAME OVER'</span>);
     <span class="func">playSoundEffect</span>(<span class="str">'sfx/crash.mp3'</span>);
