@@ -129,7 +129,7 @@
 
 <p>Here&rsquo;s the result:</p>
 
-    [ ship in upper-left corner ]
+<p><img class="cga" id="draw.png" src="draw.png" alt="draw result"></p>
 
 <p>Next, the program captures the rendered region into a sprite:</p>
 
@@ -138,7 +138,7 @@
 80   GET(0,0)-(16,8),S
 </pre>
 
-<p>The <code>GET</code> statement treats the provided array as a string of bytes. It packs the sprite&rsquo;s width into the first two bytes, and the sprite&rsquo;s height into the next two bytes. Then it separately packs each row of pixel data into the remaining bytes. In this case, the width is <span class="nowrap">16 &minus; 0 + 1 = 17 pixels</span>. At one nibble per pixel and two nibbles per byte, each row requires <span class="nowrap">&lceil;17 / 2&rceil; = 9 bytes</span>. In total, the sprite consumes <span class="nowrap">2 + 2 + (9 bytes/row) * (9 rows) = 85 bytes</span>.</p>
+<p>The <code>GET</code> statement treats the provided array as a string of bytes. It packs the sprite&rsquo;s width into the first two bytes, and the sprite&rsquo;s height into the next two bytes. Then it separately packs each row of pixel data into the remaining bytes. In this case, the width is <span class="nowrap">16 &minus; 0 + 1 = 17 pixels</span>. At one nibble per pixel and two nibbles per byte, each row requires <span class="nowrap">&lceil;17 / 2&rceil; = 9 bytes</span>. In total, the sprite consumes <span class="nowrap">2 + 2 + (9 bytes/row) &times; (9 rows) = 85 bytes</span>.</p>
 
 <p>At first glance, that seems to explain the argument provided to the <code>DIM</code> statement. But, by default, the <code>DIM</code> statement allocates an array of single-precision floating-point numbers, where each element occupies four bytes. Consequently, the sprite needs an array of length <span class="nowrap">&lceil;85 / 4&rceil; = 22 elements</span>.
 
@@ -166,7 +166,7 @@
 
 <p>Cartridge BASIC does not provide a way to reposition the single-pixel cursor without drawing. Instead, <span class="nowrap">line 100</span> renders the initial segment in color <code>6</code> (brown). From there, a for-loop reads coordinate pairs from a DATA statement, and it uses the line-to variant of the LINE statement to successively extend the path, again in color <code>6</code>. Notably, two endpoints are one pixel beyond the screen&rsquo;s right edge, which breaks the ceiling and floor into disjoint regions:</p>
 
-    [ pic of ceiling and floor outline ]
+<p><img class="cga" id="cave-outline.png" src="cave-outline.png" alt="cave outline"></p>
 
 <p>Next, the program flood fills the ceiling and floor via <code>PAINT</code> statements:</p>
 
@@ -176,6 +176,8 @@
 </pre>
 
 <p>Regarding the arguments, the first <code>6</code> is the fill color, and the second <code>6</code> is color of the boundary to contain the flood. Both flood seed coordinates are within the screen&rsquo;s central column. The ceiling seed is ten rows from the top, and the floor seed is ten rows from the bottom.</p>
+
+<p><img class="cga" id="cave-filled.png" src="cave-filled.png" alt="cave filled"></p>
 
 <p>After painting the ceiling and floor, the program generates twenty random speleothems:</p>
 
@@ -194,7 +196,7 @@
 
 <p>For each speleothem, the program plots and fills a triangular shape made from two line segments extending from the ceiling or floor that meet at common point. As shown below, the program staggers the stalactites and stalagmites, unlike real speleothems, which form in aligned pairs.</p>
 
-    [ cave pic ]
+<p><img class="cga" id="cave.png" src="cave.png" alt="cave"></p>
 
 <p>As previously mentioned, <code>XB</code> is the minimum stalactite height, a value that increases to make each level more difficult than the last. While the minimum stalagmite height remains constant, the growing stalactites will eventually manifest a kill screen. The specific level at which this occurs depends on the random number generator.</p>
 
@@ -205,7 +207,9 @@
 270  PRINT "LEVEL";RM
 </pre>
 
-<p>For a true-to-original experience, the TypeScript port displays text using the 8x8 pixel glyphs of the monospaced CGA font.</p>
+<p>For a true-to-original experience, the TypeScript port displays text using the 8&times;8 pixel glyphs of the monospaced CGA font.</p>
+
+<p><img class="cga" id="level-1.png" src="level-1.png" alt="level 1"></p>
 
 <p>After that, the program initializes the variables that keep track of the ship&rsquo;s position and vertical velocity:</p>
 

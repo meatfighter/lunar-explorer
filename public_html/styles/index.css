@@ -136,6 +136,19 @@ img.centered {
     margin-right: auto;
 }
 
+img.cga {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+
 i {
     font-style: italic;
     font-weight: normal;
@@ -146,7 +159,7 @@ i {
 h1 {
     font-size: 2em;
     font-weight: bold;
-    margin-top: 0.67em;
+    margin-top: 1.1em;
     margin-bottom: 0.67em;
     font-family: inherit;
     line-height: normal;
