@@ -148,6 +148,17 @@ img.cga {
     image-rendering: crisp-edges;
 }
 
+img.svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
 
 i {
     font-style: italic;

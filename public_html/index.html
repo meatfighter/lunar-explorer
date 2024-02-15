@@ -227,17 +227,17 @@
 
 <p>The <code>PUT</code> statements accepts an optional parameter that specifies how the sprite combines with the pixels of the video page. Since only three arguments were provided on <span class="nowrap">line 290</span>, <code>PUT</code> defaults to bitwise XOR. But it can also bitwise OR, bitwise AND, transfer without blending, or invert and transfer without blending. Since the background is color <code>0</code> (black), bitwise XORing the pixels does not modify the sprite&rsquo;s colors.</p>
 
-<p>The black pixels surrounding the ship, as shown in the magnified sprite below, are not transparent. However, in this case, when the sprite is rendered, those pixels become indistinguishable from the background.</p>
+<p>The black pixels surrounding the ship, as shown in the magnified sprite below, are not transparent. However, when the sprite is rendered, those pixels become indistinguishable from those of the black background.</p>
 
-    [ sprite zoom up ]
+<p><img class="cga" id="ship-sprite.png" src="ship-sprite.png" alt="ship sprite" style="max-width: 255px;"></p>
 
-<p>Several different graphical effects can be achieved with <code>PUT</code>&rsquo;s optional parameter. For example, to simulate transparent pixels, a mask sprite is created with black pixels for the visible regions and white pixels (color <code>15</code>) for the transparent regions. Bitwise ANDing the mask with a background produces a white silhouette:</p>
+<p>Several graphical effects can be achieved with <code>PUT</code>&rsquo;s optional parameter. For example, to simulate transparency, a mask sprite is created with black pixels for the visible regions and white pixels (color <code>15</code>) for the transparent regions. Bitwise ANDing a background with the mask casts a white silhouette on the background:</p>
 
-    [ result of bitwise ANDing the mask ]
+<p><img class="svg" id="bitwise-and.svg" src="bitwise-and.svg" alt="bitwise AND"></p>
 
 <p>Then the original sprite, with transparent regions colored black, is bitwise ORed over the silhouette:</p>
 
-    [ result of bitwise ORing the mask ]
+<p><img class="svg" id="bitwise-or.svg" src="bitwise-or.svg" alt="bitwise OR"></p>
 
 <p><span class="nowrap"><i>Lunar Explorer</i></span> does not employ that technique. But it does take advance of the default bitwise XOR operation, as explained later.</p>
 
@@ -253,7 +253,7 @@
 360  Y=Y+YAD
 370  IF POINT(X+17,Y+6)=6 OR POINT(X+9,Y-1)=6 OR POINT(X+8,Y+9)=6 THEN 430
 380  PUT(X,Y),S
-390  IF X<>303 THEN GOTO 300
+390  IF X&lt;&gt;303 THEN GOTO 300
 </pre>
 
 <p>Reading the <code>INKEY$</code> variable dequeues and returns one character from the keyboard buffer or empty string when the keyboard buffer is clear. This technique is significantly different from the input handling in most modern programming languages, which are event-based due to the many levels of abstraction that evolved between peripheral hardware and software since the days of the PCjr.</p>
@@ -302,13 +302,13 @@
 410  RM=RM+1:XB=XB+2
 </pre>
 
-    Then, it clears screen, it resets the <code>DATA</code> statement&rsquo;s read index with <code>RESTORE</code>, and it jumps back to <span class="nowrap">line 100</span> to draw a new random cave:
+<p>Then, it clears screen, it resets the <code>DATA</code> statement&rsquo;s read index with <code>RESTORE</code>, and it jumps back to <span class="nowrap">line 100</span> to draw a new cave:</p>
 
 <pre class="code">
 420  CLS:RESTORE:GOTO 100
 </pre>
 
-    The subsequent code executes when the ship crashes:
+<p>The subsequent code executes when the ship crashes:</p>
 
 <pre class="code">
 430  NOISE 6,13,1
