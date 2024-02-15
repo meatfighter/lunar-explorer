@@ -270,15 +270,15 @@
 
 <p>Next, the program increments the ships horizontal coordinate by one and the ships vertical coordinate by the horizontal velocity.</p>
 
-<p>After that, <span class="nowrap">line 370</span> probes three points about the ship:</p>
+<p>After that, <span class="nowrap">line 370</span> probes three points about the ship, at the yellow pixels locations:</p>
 
-    [ probe points ]
+<p><img class="cga" id="ship-points.png" src="ship-points.png" alt="probe points" style="max-width: 315px;"></p>
 
-<p>If any of them are brown, then the ship collided with the cave surface and the program jumps out of the game loop.</p>
+<p>If any of those points are brown, then the ship collided with the cave surface and the program jumps out of the game loop. Otherwise, the program renders the ship sprite at the new location.</p>
 
-<p>Otherwise, the program renders the ship sprite at the new location. Since the program repeatedly erases and draws the sprite, the ship flickers on a real PCjr. The effect is less noticeable in <span class="nowrap">PC-BASIC</span> (discussed below), and it is completely absent in the TypeScript port because the port synchronizes frame rendering with the display's refresh rate.</p>
+<p>Since the program repeatedly erases and draws the sprite, the ship flickers on a real PCjr. The effect is less noticeable in <span class="nowrap">PC-BASIC</span> (discussed below), and it is completely absent in the TypeScript port because the port synchronizes frame rendering with the display's refresh rate.</p>
 
-<p>The final line continues the game loop if the player has yet to reach the right side of the screen. Else, the player is rewarded for passing the level with a sound effect provided by a <code>PLAY</code> statement:</p>
+<p>The final line of the game loop continues the loop if the player has yet to reach the right side of the screen. Else, the player is rewarded for passing the level with a sound effect provided by a <code>PLAY</code> statement:</p>
 
 <pre class="code">
 400  PLAY"T255L64MLO0V15EFEF"
