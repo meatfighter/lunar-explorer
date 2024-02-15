@@ -86,11 +86,13 @@
 
 <p>The BASIC code editor displays its soft key mapping at the bottom of the screen, even during program execution:</p>
 
-    [ soft key mapping pic ]
+<p><img class="centered" id="soft-keys.png" src="soft-keys.png" alt="soft keys"></p>
 
-<p>The <code>KEY OFF</code> call hides that line.</p>
+<p>The following screenshot shows what happens when the <code>KEY OFF</code> statement, which hides that text, is removed (see lower left).</p>
 
-<p>Afterward, the program declares two variables:</p>
+<p><img class="centered" id="key-on.png" src="key-on.png" alt="KEY OFF omitted"></p>
+
+<p>On the subsequent line, the program declares two variables:</p>
 
 <pre class="code">
 50   RM=1:XB=40
@@ -322,13 +324,17 @@
 
 <p>The crash sound effect is produced by three <code>NOISE</code> statements. The argument 6 indicates white noise at the NTSC colorburst frequency <span class="nowrap">(315/88 MHz)</span> divided by 2048. Collectively, the statements produce low-pitched white noise that rises and then diminishes in volume for about a sixth of a second.</p>
 
-<p>Following the sound effect, the program prints &ldquo;GAME OVER&rdquo; in the center of the screen and a prompt inquiring if the user wants to play again. If the user types &ldquo;N&rdquo;, then the program jumps to its final line, which terminates it:</p>
+<p>Following the sound effect, the program prints &ldquo;GAME OVER&rdquo; in the center of the screen and a prompt inquiring if the user wants to play again. If the user types &ldquo;N&rdquo;, the program jumps to its final line, which terminates it:</p>
 
 <pre class="code">
 530  END
 </pre>
 
-<p>Otherwise, the program resets the level number and the stalactite height, before generating a new random cave. <span class="nowrap">Line 520</span>, shown earlier, contains the <code>DATA</code> statement.</p>
+<p>The <code>END</code> statement does not restore the soft keys text at the bottom of the screen, nor does it switch back to the original video mode. The program leaves it to the user to issue <code>KEY ON</code> and <code>SCREEN</code> <i>mode</i>.</p>
+
+<p>If the user types &ldquo;Y&rdquo;, the program resets the level number and the stalactite height before generating a new cave.</p>
+
+<p><span class="nowrap">Line 520</span>, shown earlier, contains the <code>DATA</code> statement.</p>
 
 
 <h1>TypeScript Port</h1>
