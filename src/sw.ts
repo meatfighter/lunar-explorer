@@ -2,10 +2,13 @@ declare const self: ServiceWorkerGlobalScope;
 
 const CACHE_NAME = 'lunar-explorer-v1';
 const URLS_TO_CACHE = [
-    'app.css',
     'app.bundle.js',
     'app-chunk.bundle.js',
+    'app.css',
     'app.html',
+    'index.bundle.js',
+    'index.css',
+    'index.html',
     'lunar-explorer.zip',
     'jszip.bundle.js',
 ];
@@ -57,7 +60,10 @@ self.addEventListener('fetch', e => {
         }
 
         try {
-            const fetchResponse = await fetchWithRetry(e.request);
+            const fetchResponse = await fetchWithRetry(e.request,
+                    (new URL(e.request.url).hostname !== self.location.hostname)
+                            ? { mode: 'cors', credentials: 'omit' }
+                            : {});
             await cache.put(e.request, fetchResponse.clone());
             return fetchResponse;
         } catch {
