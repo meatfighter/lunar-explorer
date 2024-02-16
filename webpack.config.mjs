@@ -1,10 +1,16 @@
 import path from 'path';
 
 export default {
+    mode: 'production',
     entry: {
         index: './src/index.ts',
         app: './src/app.ts',
         sw: './src/sw.ts',
+        boot: './src/boot.ts',
+    },
+    output: {
+        filename: '[name].bundle.js',
+        path: path.resolve(process.cwd(), 'public_html/scripts'),
     },
     module: {
         rules: [
@@ -17,9 +23,5 @@ export default {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
-    },
-    output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(process.cwd(), 'public_html/scripts'),
     },
 };
