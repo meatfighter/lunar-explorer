@@ -20,9 +20,10 @@
     }
   ],
   "scope": "./",
-  "start_url": "./index.html",
+  "start_url": "./app.html",
   "background_color": "#0D1117",
   "theme_color": "#0D1117",
-  "display": "browser",
+  "display": "fullscreen",
+  "orientation": "portrait-primary",
   "lang": "en-US"
 }

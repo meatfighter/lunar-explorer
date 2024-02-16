@@ -10,10 +10,11 @@
   "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
-    "clean": "rimraf public_html/*.bundle.js public_html/*.bundle.js.LICENSE.txt public_html/lunar-explorer.zip",
-    "pack": "npx webpack --mode production",
-    "zip": "zip -r public_html/lunar-explorer.zip sfx/",
-    "build": "npm run clean && npm run pack && npm run zip"
+    "clean": "rimraf public_html/*.bundle.js public_html/*.bundle.js.LICENSE.txt public_html/app/*.bundle.js public_html/app/*.bundle.js.LICENSE.txt public_html/app/lunar-explorer.zip",
+    "pack:index": "npx webpack --mode production --config ./webpack.config.index.mjs",
+    "pack:app": "npx webpack --mode production --config ./webpack.config.app.mjs",
+    "zip": "zip -r public_html/app/lunar-explorer.zip sfx/",
+    "build": "npm run clean && npm run pack:index && npm run pack:app && npm run zip"
   },
   "devDependencies": {
     "rimraf": "^5.0.5",

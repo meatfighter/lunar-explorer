@@ -4,9 +4,6 @@ export default {
     mode: 'production',
     entry: {
         index: './src/index.ts',
-        app: './src/app.ts',
-        sw: './src/sw.ts',
-        boot: './src/boot.ts',
     },
     output: {
         filename: '[name].bundle.js',

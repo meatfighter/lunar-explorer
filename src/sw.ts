@@ -1,16 +1,20 @@
 declare const self: ServiceWorkerGlobalScope;
 
-const CACHE_NAME = 'lunar-explorer-v1';
+const CACHE_NAME = 'lunar-explorer-2024-02-16';
 const URLS_TO_CACHE = [
     'app.bundle.js',
     'app-chunk.bundle.js',
     'app.css',
     'app.html',
-    'index.bundle.js',
-    'index.css',
-    'index.html',
-    'lunar-explorer.zip',
+    'apple-touch-icon.png',
+    'favicon.ico',
+    'favicon.svg',
+    'google-touch-icon-192.png',
+    'google-touch-icon-512.png',
     'jszip.bundle.js',
+    'lunar-explorer.zip',
+    'manifest.json',
+    'mask-icon.svg',
 ];
 
 /**

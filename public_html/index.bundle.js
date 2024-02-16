@@ -1,1 +1,1 @@
-(()=>{"use strict";document.addEventListener("DOMContentLoaded",(function(){document.getElementById("playButton").addEventListener("click",(t=>window.location.href="app.html"))}))})();
+(()=>{"use strict";document.addEventListener("DOMContentLoaded",(function(){document.getElementById("playButton").addEventListener("click",(t=>window.location.href="app/app.html"))}))})();
