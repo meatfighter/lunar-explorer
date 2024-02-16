@@ -1,10 +1,10 @@
 function initApp() {
-    import('./app').then(app => app.init());
+    import(/* webpackChunkName: "app-chunk" */ './app').then(app => app.init());
 }
 
 export function init() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('scripts/sw.bundle.js', { scope: '/' }).then(_ => initApp());
+        navigator.serviceWorker.register('sw.bundle.js').then(_ => initApp());
     } else {
         initApp();
     }

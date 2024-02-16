@@ -2,11 +2,12 @@ declare const self: ServiceWorkerGlobalScope;
 
 const CACHE_NAME = 'lunar-explorer-v1';
 const URLS_TO_CACHE = [
-    '/',
-    '/app.html',
-    '/styles/app.css',
-    '/script/app.bundle.js',
-    '/resources/lunar-explorer.zip'
+    'app.css',
+    'app.bundle.js',
+    'app-chunk.bundle.js',
+    'app.html',
+    'lunar-explorer.zip',
+    'jszip.bundle.js',
 ];
 
 /**
@@ -53,14 +54,23 @@ self.addEventListener('fetch', e => {
 
         if (cachedResponse) {
             return cachedResponse;
-        } else {
-            try {
-                const fetchResponse = await fetchWithRetry(e.request);
-                await cache.put(e.request, fetchResponse.clone());
-                return fetchResponse;
-            } catch {
-                return new Response('Service Unavailable', { status: 503 });
-            }
+        }
+
+        try {
+            const fetchResponse = await fetchWithRetry(e.request);
+            await cache.put(e.request, fetchResponse.clone());
+            return fetchResponse;
+        } catch {
+            return new Response('Service Unavailable', { status: 503 });
         }
     })());
+});
+
+self.addEventListener('activate', e => {
+    e.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
+                    .map(cacheName => caches.delete(cacheName)));
+        }).then(() => self.clients.claim())
+    );
 });
