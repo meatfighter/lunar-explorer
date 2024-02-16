@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rimraf public_html/scripts/*",
     "pack": "npx webpack --mode production",
-    "zip": "zip -r public_html/lunar-explorer.zip sfx/",
+    "zip": "zip -r public_html/resources/lunar-explorer.zip sfx/",
     "build": "npm run clean && npm run pack && npm run zip"
   },
   "devDependencies": {
@@ -20,7 +20,8 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "worker-loader": "^3.0.8"
   },
   "dependencies": {
     "jszip": "^3.10.1"

@@ -15,6 +15,10 @@ async function init() {
     window.addEventListener('unhandledrejection', e => e.preventDefault());
     document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
 
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.bundle.js', { scope: '/' }).then();
+    }
+
     enterProgress();
 }
 

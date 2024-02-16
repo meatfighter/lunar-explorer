@@ -20,7 +20,7 @@ export function enter() {
     windowResized();
 
     const progressBar = document.getElementById('loading-progress') as HTMLProgressElement;
-    download('lunar-explorer.zip', frac => progressBar.value = ZIP_DOWNLOAD_PERCENT * frac).then(onDownload);
+    download('resources/lunar-explorer.zip', frac => progressBar.value = ZIP_DOWNLOAD_PERCENT * frac).then(onDownload);
 }
 
 export function exit() {

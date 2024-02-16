@@ -4,6 +4,7 @@ export default {
     entry: {
         index: './src/index.ts',
         app: './src/app.ts',
+        sw: './src/sw.ts',
     },
     module: {
         rules: [

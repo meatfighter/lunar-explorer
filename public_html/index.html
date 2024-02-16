@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0D1117">
 
-    <link rel="stylesheet" href="styles/index.css?v=2024-02-15" type="text/css">
     <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles/index.css?v=2024-02-15" type="text/css">
     <link rel="mask-icon" href="mask-icon.svg" color="#000000">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -413,9 +413,9 @@ shipY <span class="num">+=</span> shipVy;
 pcbasic --preset=pcjr
 </pre>
 
-<p>Copy the code into the clipboard and paste it into <span class="nowrap">PC-BASIC</span> with <span class="nowrap">F11&plus;V</span>.</p>
+<p>Copy the code from <a href="https://github.com/meatfighter/lunar-explorer/blob/main/basic/lunar.bas">here</a> and paste it into <span class="nowrap">PC-BASIC</span> with <span class="nowrap">F11&plus;V</span>. Then type <code>RUN</code> and press Enter to launch the game.</p>
 
-<p>But <span class="nowrap">PC-BASIC</span> interprets code much faster than a real PCjr. The only way to slow down the program is to introduce a delay in the game loop:</p>
+<p>Since <span class="nowrap">PC-BASIC</span> interprets code much faster than a real PCjr, a delay was inserted into the game loop:</p>
 
 <pre class="code">
 385  T = TIMER:WHILE T = TIMER:WEND:T = TIMER:WHILE T = TIMER:WEND

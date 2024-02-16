@@ -9,7 +9,12 @@
     "sourceMap": true,
     "rootDir": "./src",
     "outDir": "./public_html/scripts",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "lib": [
+      "DOM",
+      "ESNext",
+      "WebWorker"
+    ]
   },
   "include": [
     "src/**/*"
