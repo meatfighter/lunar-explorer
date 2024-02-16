@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="date" content="2024-02-11">
+    <meta name="date" content="2024-02-15">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#C2BCB1">
+    <meta name="theme-color" content="#0D1117">
 
-    <link rel="stylesheet" href="styles/index.css?v=2024-02-11" type="text/css">
+    <link rel="stylesheet" href="styles/index.css?v=2024-02-15" type="text/css">
     <link rel="manifest" href="manifest.json">
     <link rel="mask-icon" href="mask-icon.svg" color="#000000">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -52,13 +52,13 @@
 
 <h1>Deep Dive</h1>
 
-<p>The first line of the program seeds the random number generator with the number of seconds elapsed since midnight or system reset:</p>
+<p>The first line seeds the random number generator with the number of seconds elapsed since midnight or system reset:</p>
 
 <pre class="code">
 10   RANDOMIZE TIMER
 </pre>
 
-<p>That statement only works when Cartridge BASIC is launched from DOS (by executing <code>BASICA</code>) because it depends on the DOS API (software interrupt <code>21h</code>, service <code>2Ch</code>). Additionally, since the PCjr lacks a CMOS battery, TIMER provides seconds from midnight only if the user manually adjusted the clock, a process routinely done at power on.</p>
+<p>That statement only works when Cartridge BASIC is launched from DOS (by executing <code>BASICA</code>) because it depends on the <span class="nowrap">DOS API</span> (software interrupt <code>21h</code>, service <code>2Ch</code>). Additionally, since the PCjr lacks a CMOS battery, <code>TIMER</code> provides seconds from midnight only if the user manually adjusted the clock, a process routinely done at power on.</p>
 
 <p>The PCjr does not have dedicated video RAM. Instead, a program reserves a page of the first <span class="nowrap">128 KB</span> of primary memory to serve as the buffer that backs the video display. By default, Cartridge BASIC allocates a <span class="nowrap">16 KB</span> page at the top of memory. But <span class="nowrap"><i>Lunar Explorer</i></span> uses an enhanced CGA mode that requires <span class="nowrap">32 KB</span>. Before it enters that mode, it clears the screen with <code>CLS</code> and then it expands the video page to <span class="nowrap">32 KB</span> with the <code>CLEAR</code> command:</p>
 
@@ -66,7 +66,7 @@
 20   CLS:CLEAR ,,,32768!
 </pre>
 
-<p>The command is called &ldquo;CLEAR&rdquo; because it also resets the reserved page to all zeros. The bang at the end is unnecessary. It indicates the numeric literal is a single-precision floating-point constant. But the interpreter automatically deduces that from the fact that the value exceeds the range of an integer (by one in this case).</p>
+<p>The command is called &ldquo;<code>CLEAR</code>&rdquo; because it also resets the reserved page to all zeros. The bang at the end is unnecessary. It indicates the numeric literal is a single-precision floating-point constant. But the interpreter automatically deduces that since the value exceeds the positive range of a signed integer by one.</p>
 
 <p>The PCjr monitor contains an amplified speaker that supplements the case speaker. The program enables the monitor speaker with the <code>SOUND</code> command:</p>
 
@@ -124,16 +124,15 @@
 <dt><code>F</code> <i>n</i></dt><dd>Down-right</dd>
 <dt><code>G</code> <i>n</i></dt><dd>Down-left</dd>
 <dt><code>H</code> <i>n</i></dt><dd>Up-left</dd>
-<dt><code>M</code> <i>x,y</i></dt><dd>moves the cursor to the specified coordinates.</dd>
 </dl>
 
-<p>The prefix <code>B</code> means move the cursor without plotting, and <code>C</code> <i>n</i> sets the cursor color. There are additional commands, but <span class="nowrap"><i>Lunar Explorer</i></span>&rsquo;s single <code>DRAW</code> statement uses only those described above.</p>
+<p><code>C</code> <i>n</i> sets the cursor color, <code>M</code> <i>x,y</i> moves the cursor to the specified coordinates, and the prefix <code>B</code> means move the cursor without plotting. There are additional commands, but <span class="nowrap"><i>Lunar Explorer</i></span>&rsquo;s single <code>DRAW</code> statement uses only those described here.</p>
 
-<p>Here&rsquo;s the result:</p>
+<p>This is result:</p>
 
 <p><img class="cga" id="draw.png" src="draw.png" alt="draw result"></p>
 
-<p>Next, the program captures the rendered region into a sprite:</p>
+<p>Next, the program stores the rendered graphic as a sprite:</p>
 
 <pre class="code">
 70   DIM S(85)
@@ -166,7 +165,7 @@
 520  DATA 260,20,290,90,320,90,320,110,290,110,270,180,70,180,0,199
 </pre>
 
-<p>Cartridge BASIC does not provide a way to reposition the single-pixel cursor without drawing. Instead, <span class="nowrap">line 100</span> renders the initial segment in color <code>6</code> (brown). From there, a for-loop reads coordinate pairs from a DATA statement, and it uses the line-to variant of the LINE statement to successively extend the path, again in color <code>6</code>. Notably, two endpoints are one pixel beyond the screen&rsquo;s right edge, which breaks the ceiling and floor into disjoint regions:</p>
+<p>Cartridge BASIC does not provide a way to reposition the single-pixel cursor without drawing. Instead, <span class="nowrap">line 100</span> renders the initial segment in color <code>6</code> (brown). From there, a for-loop reads coordinate pairs from a DATA statement, and it uses the line-to variant of the <code>LINE</code> statement to successively extend the path, again in color <code>6</code>. Notably, two endpoints are one pixel beyond the screen&rsquo;s right edge, which breaks the ceiling and floor into disjoint regions:</p>
 
 <p><img class="cga" id="cave-outline.png" src="cave-outline.png" alt="cave outline"></p>
 
@@ -231,7 +230,7 @@
 
 <p><img class="cga" id="ship-sprite.png" src="ship-sprite.png" alt="ship sprite" style="max-width: 255px;"></p>
 
-<p>Several graphical effects can be achieved with <code>PUT</code>&rsquo;s optional parameter. For example, to simulate transparency, a mask sprite is created with black pixels for the visible regions and white pixels (color <code>15</code>) for the transparent regions. Bitwise ANDing a background with the mask casts a white silhouette on the background:</p>
+<p>Several graphical effects can be achieved with <code>PUT</code>&rsquo;s optional parameter. For example, to simulate transparency, a mask sprite is created with black pixels for the visible regions (all bits clear) and white pixels for the transparent regions (all bits set). Bitwise ANDing a background with the mask casts a white silhouette on the background:</p>
 
 <p><img class="svg" id="bitwise-and.svg" src="bitwise-and.svg" alt="bitwise AND"></p>
 
@@ -260,17 +259,17 @@
 
 <p>The TypeScript port responds to mouse clicks and touch taps in addition to key presses.</p>
 
-<p>If there is no input, the program increases the ship&rsquo;s horizontal velocity by 0.4 to simulate acceleration due to gravity. Otherwise, the program decreases the ship&rsquo;s horizontal velocity by one and it emits a sound effect reminiscent of a short jet blast, suggesting a momentary release of thrust.</p>
+<p>If there is no input, the program increases the ship&rsquo;s vertical velocity by 0.4 to simulate acceleration due to gravity. Otherwise, the program decreases the ship&rsquo;s vertical velocity by one and it emits a sound effect, via a pair of <code>NOISE</code> statements, reminiscent of a short jet blast.</p>
 
 <p>The <code>NOISE</code> statement invokes the noise generator of the Texas Instruments <a href="https://en.wikipedia.org/wiki/Texas_Instruments_SN76489">SN76496</a> chip. The first parameter asserts the generation frequency and the noise type: periodic or white. The argument <code>4</code> means white noise at the NTSC colorburst frequency <span class="nowrap">(315/88 MHz)</span> divided by 512. The second parameter is the volume (0&ndash;15). The third parameter is the duration specified in system timer ticks at the default frequency of the Programmable Interval Timer <span class="nowrap">(18.2 ticks/sec)</span>, which gets delivered to the interpreter by a handler hooked to BIOS interrupt <code>8h</code>. The value <code>0.5</code> gets rounded to one tick. In summary, that pair of <code>NOISE</code> statements produces a high-pitched white noise that lasts about a tenth of a second with decreasing volume.</p>
 
-<p>The TypeScript port plays sound effects sampled from <span class="nowrap">PC-BASIC</span> (more on this later).</p>
+<p>The TypeScript port plays sound effects sampled from <span class="nowrap">PC-BASIC</span> emulating the game (more on this later).</p>
 
-<p>Before the program updates the ship&rsquo;s coordinates, <span class="nowrap">line 350</span> renders the ship sprite at its current location. This erases the ship because twice bitwise XORing a sprite pixel value with a background pixel value restores the original background pixel value.</p>
+<p>Before the program updates the ship&rsquo;s coordinates, <span class="nowrap">line 350</span> renders the ship sprite at its current location. This erases the ship because twice bitwise XORing a sprite pixel with a background pixel restores the original background pixel.</p>
 
-<p>Next, the program increments the ships horizontal coordinate by one and the ships vertical coordinate by the horizontal velocity.</p>
+<p>Next, the program increments the ship&rsquo;s horizontal coordinate by its constant horizontal velocity (one). And it increments the ship&rsquo;s vertical coordinate by its changing vertical velocity (<code>YAD</code>).</p>
 
-<p>After that, <span class="nowrap">line 370</span> probes three points about the ship, at the yellow pixels locations:</p>
+<p>After that, <span class="nowrap">line 370</span> probes three points about the ship indicated by the yellow pixels in the following image.</p>
 
 <p><img class="cga" id="ship-points.png" src="ship-points.png" alt="probe points" style="max-width: 315px;"></p>
 
@@ -330,7 +329,7 @@
 530  END
 </pre>
 
-<p>The <code>END</code> statement does not restore the soft keys text at the bottom of the screen, nor does it switch back to the original video mode. The program leaves it to the user to issue <code>KEY ON</code> and <code>SCREEN</code> <i>mode</i>.</p>
+<p>The <code>END</code> statement does not restore the soft key text at the bottom of the screen, nor does it switch back to the original video mode. The program leaves it to the user to issue <code>KEY ON</code> and <code>SCREEN</code> <i>mode</i>.</p>
 
 <p>If the user types &ldquo;Y&rdquo;, the program resets the level number and the stalactite height before generating a new cave.</p>
 
@@ -339,7 +338,7 @@
 
 <h1>TypeScript Port</h1>
 
-<p>As revealed below, the TypeScript port implements the BASIC statements used in <span class="nowrap"><i>Lunar Explorer</i></span> as functions to accurately reproduce the game. It leverages <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a> for the line function and the <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill algorithm</a> for the <code>paint</code> function. The <code>draw</code> function contains a &ldquo;graphics definition language&rdquo; interpreter. All of them render to a <span class="nowrap">320&times;200 pixel</span> back buffer that gets transferred to the display.</p>
+<p>As revealed below, the TypeScript port implements functions that reproduce the effects of the BASIC statements. They render to a <span class="nowrap">320&times;200 pixel</span> back buffer that is subsequently transferred to the display. The port leverages <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a> for the equivalent of the <code>LINE</code> statement and the <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill algorithm</a> for equivalent of the <code>PAINT</code> statement. The analog of the <code>DRAW</code> statement contains a &ldquo;graphics definition language&rdquo; interpreter.</p>
 
 <pre class="code">
 <span class="func">cls</span>();
@@ -406,7 +405,7 @@ shipY <span class="num">+=</span> shipVy;
 
 <h1>Emulation</h1>
 
-<p>The easiest way to run the type-in program on a modern machine is to use <span class="nowrap">PC-BASIC</span>, a free, cross-platform, open-source interpreter for Cartridge BASIC and several other PC and Tandy BASIC dialects. It can be downloaded <a href="https://robhagemans.github.io/pcbasic/download.html">here</a>.</p>
+<p>The easiest way to run the original source on a modern machine is to use <span class="nowrap">PC-BASIC</span>, a free, cross-platform, open-source interpreter for several BASIC dialects and graphical configurations of early PC compatibles. It can be downloaded <a href="https://robhagemans.github.io/pcbasic/download.html">here</a>.</p>
 
 <p>To emulate a PCjr with Cartridge BASIC, launch it with the following command:</p>
 
@@ -422,7 +421,7 @@ pcbasic --preset=pcjr
 385  T = TIMER:WHILE T = TIMER:WEND:T = TIMER:WHILE T = TIMER:WEND
 </pre>
 
-<p>That line uses the aforementioned <code>TIMER</code> variable, which updates approximately every 55 ms. The delay slows the game down to about <span class="nowrap">9 frames/sec</span>. The TypeScript port runs at <span class="nowrap">10 frames/sec</span>. At the time of this writing, it is unknown exactly what rate the game runs on an actual PCjr.</p>
+<p>That line uses the aforementioned <code>TIMER</code> variable, which updates approximately every 55 ms. The delay slows the game to about <span class="nowrap">9 frames/sec</span>. The TypeScript port is fixed at <span class="nowrap">10 frames/sec</span>. At the time of this writing, the frame rate at which the game runs on an actual PCjr remains unknown.</p>
 
 <hr>
 <table class="copyright">
@@ -430,6 +429,6 @@ pcbasic --preset=pcjr
 </table>
 
 </main>
-<script type="module" src="scripts/index.bundle.js?v=2024-02-11"></script>
+<script type="module" src="scripts/index.bundle.js?v=2024-02-15"></script>
 </body>
 </html>
