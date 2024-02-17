@@ -62,32 +62,28 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('fetch', e => {
-
     console.log(`*** FETCH: ${e.request.url}`);
 
-    e.respondWith((async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(e.request);
-
-        if (cachedResponse) {
-            return cachedResponse;
-        }
-
-        try {
-            const fetchResponse = await fetchWithRetry(e.request,
-                    (new URL(e.request.url).hostname !== self.location.hostname)
-                            ? { mode: 'cors', credentials: 'omit' }
-                            : {});
-            if (fetchResponse.ok) {
-                await cache.put(e.request, fetchResponse.clone());
-            } else {
-                console.log(`${e.request.url}: ${fetchResponse.status}`);
-            }
-            return fetchResponse;
-        } catch {
-            return new Response('Service Unavailable', { status: 503 });
-        }
-    })());
+    e.respondWith(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.match(e.request).then(cachedResponse => {
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+                const fetchOptions: RequestInit = (new URL(e.request.url).hostname !== self.location.hostname)
+                        ? { mode: 'cors', credentials: 'omit' } : {};
+                return fetchWithRetry(e.request, fetchOptions).then(fetchResponse => {
+                    if (fetchResponse.ok) {
+                        cache.put(e.request, fetchResponse.clone());
+                    } else {
+                        console.log(`${e.request.url}: ${fetchResponse.status}`);
+                    }
+                    return fetchResponse;
+                });
+            });
+        }).catch(() => new Response('Service Unavailable', { status: 503 }))
+    );
 });
+
 
 
