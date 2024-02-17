@@ -8,19 +8,7 @@ export default {
     output: {
         filename: '[name].bundle.js',
         chunkFilename: '[name].bundle.js',
-        path: path.resolve(process.cwd(), 'public_html'),
-    },
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                jszip: {
-                    test: /[\\/]node_modules[\\/]jszip[\\/]/,
-                    name: 'jszip',
-                    chunks: 'all',
-                    enforce: true
-                }
-            }
-        }
+        path: path.resolve(process.cwd(), 'public_html/scripts'),
     },
     module: {
         rules: [

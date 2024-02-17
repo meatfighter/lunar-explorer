@@ -3,12 +3,12 @@ import path from 'path';
 export default {
     mode: 'production',
     entry: {
-        app: './src/app.ts',
+        pwa: './src/pwa.ts',
     },
     output: {
         filename: '[name].bundle.js',
         chunkFilename: '[name].bundle.js',
-        path: path.resolve(process.cwd(), 'public_html/pwa/app/scripts'),
+        path: path.resolve(process.cwd(), 'public_html/pwa/scripts'),
     },
     module: {
         rules: [

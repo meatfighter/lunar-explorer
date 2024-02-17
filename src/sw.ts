@@ -1,20 +1,19 @@
 declare const self: ServiceWorkerGlobalScope;
 
 const CACHE_NAME = 'lunar-explorer-2024-02-16';
-const URLS_TO_CACHE = [
-    'app.bundle.js',
-    'app-chunk.bundle.js',
-    'app.css',
-    'app.html',
-    'apple-touch-icon.png',
-    'favicon.ico',
-    'favicon.svg',
-    'google-touch-icon-192.png',
-    'google-touch-icon-512.png',
-    'jszip.bundle.js',
-    'lunar-explorer.zip',
-    'manifest.json',
-    'mask-icon.svg',
+const URLS_TO_CACHE: string[] = [
+    // 'app.bundle.js',
+    // 'app.css',
+    // 'app.html',
+    // 'apple-touch-icon.png',
+    // 'favicon.ico',
+    // 'favicon.svg',
+    // 'google-touch-icon-192.png',
+    // 'google-touch-icon-512.png',
+    // 'jszip.bundle.js',
+    // 'lunar-explorer.zip',
+    // 'manifest.json',
+    // 'mask-icon.svg',
 ];
 
 /**
@@ -46,6 +45,14 @@ export async function fetchWithRetry(request: Request | string, options: Request
     throw new Error('Failed to fetch.');
 }
 
+self.addEventListener('activate', e => {
+    e.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
+                .map(cacheName => caches.delete(cacheName)));
+        }).then(() => self.clients.claim())
+    );
+});
 
 self.addEventListener('install', e => {
     e.waitUntil((async () => {
@@ -55,6 +62,9 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('fetch', e => {
+
+    console.log(`*** FETCH: ${e.request.url}`);
+
     e.respondWith((async () => {
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(e.request);
@@ -68,7 +78,11 @@ self.addEventListener('fetch', e => {
                     (new URL(e.request.url).hostname !== self.location.hostname)
                             ? { mode: 'cors', credentials: 'omit' }
                             : {});
-            await cache.put(e.request, fetchResponse.clone());
+            if (fetchResponse.ok) {
+                await cache.put(e.request, fetchResponse.clone());
+            } else {
+                console.log(`${e.request.url}: ${fetchResponse.status}`);
+            }
             return fetchResponse;
         } catch {
             return new Response('Service Unavailable', { status: 503 });
@@ -76,11 +90,4 @@ self.addEventListener('fetch', e => {
     })());
 });
 
-self.addEventListener('activate', e => {
-    e.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
-                    .map(cacheName => caches.delete(cacheName)));
-        }).then(() => self.clients.claim())
-    );
-});
+

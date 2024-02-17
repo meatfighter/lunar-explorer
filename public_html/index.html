@@ -4,18 +4,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0D1117">
-    <meta name="date" content="2024-02-16">
+    <meta name="date" content="2024-02-17">
 
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="favicon.ico" sizes="any" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" sizes="any" type="image/x-icon">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="mask-icon" href="mask-icon.svg" color="#000000">
+    <link rel="icon" href="pwa/app/icons/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="pwa/app/icons/favicon.ico" sizes="any" type="image/x-icon">
+    <link rel="shortcut icon" href="pwa/app/icons/favicon.ico" sizes="any" type="image/x-icon">
+    <link rel="apple-touch-icon" href="pwa/app/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="pwa/app/icons/mask-icon.svg" color="#000000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Open+Sans&family=Reem+Kufi+Fun:wght@500&display=swap">
-    <link rel="stylesheet" href="index.css?v=2024-02-16" type="text/css">
+    <link rel="stylesheet" href="styles/index.css?v=2024-02-17" type="text/css">
 
     <title>Lunar Explorer</title>
 
@@ -26,7 +26,7 @@
 
 <p class="title">Lunar Explorer</p>
 
-<p><img class="centered" src="favicon.svg" id="logo" alt="Lunar Explorer" style="max-width: 180px;"></p>
+<p><img class="centered" src="pwa/app/icons/favicon.svg" id="logo" alt="Lunar Explorer" style="max-width: 180px;"></p>
 
 <h1>About</h1>
 
@@ -41,13 +41,13 @@
 
 <p>Kudos to <i>3-2-1 Contact</i> magazine for publishing a game for the diminishing PCjr user base more than two years after IBM halted the machine&rsquo;s production. As shown below, the game&rsquo;s source is so short that it shares page space with another program. Coincidentally, both span exactly fifty-three lines.</p>
 
-<p><img class="centered" id="321aug87_0036.jpg" src="321aug87_0036.jpg" alt="August 1987 issue of 3-2-1 Contact magazine, page 35"></p>
+<p><img class="centered" id="321aug87_0036.jpg" src="images/321aug87_0036.jpg" alt="August 1987 issue of 3-2-1 Contact magazine, page 35"></p>
 
 <p><span class="nowrap"><i>Lunar Explorer</i></span> is listed below an illustration of a rocket ship blasting through a cave, an image designed to entice the reader to type in the code. Without a screenshot of actual gameplay, the reader is left in suspense until completing that grueling process.</p>
 
 <p>The PCjr originally sold with either 64 or <span class="nowrap">128 KB</span> of RAM. Although the magazine asserts the game is compatible with both a <span class="nowrap">128 KB</span> PCjr and a PC equipped with a CGA card, the program employs the superior graphics and sound capabilities exclusive to the PCjr, and it uses commands only found in Cartridge BASIC, a BASIC dialect unique to the PCjr.</p>
 
-<p><img class="centered" id="cartridge-basic.jpg" src="cartridge-basic.jpg" alt="cartridge basic"></p>
+<p><img class="centered" id="cartridge-basic.jpg" src="images/cartridge-basic.jpg" alt="cartridge basic"></p>
 
 
 <h1>Deep Dive</h1>
@@ -86,11 +86,11 @@
 
 <p>The BASIC code editor displays its soft key mapping at the bottom of the screen, even during program execution:</p>
 
-<p><img class="centered" id="soft-keys.png" src="soft-keys.png" alt="soft keys"></p>
+<p><img class="centered" id="soft-keys.png" src="images/soft-keys.png" alt="soft keys"></p>
 
 <p>The following screenshot shows what happens when the <code>KEY OFF</code> statement, which hides that text, is removed (see lower left).</p>
 
-<p><img class="centered" id="key-on.png" src="key-on.png" alt="KEY OFF omitted"></p>
+<p><img class="centered" id="key-on.png" src="images/key-on.png" alt="KEY OFF omitted"></p>
 
 <p>On the subsequent line, the program declares two variables:</p>
 
@@ -130,7 +130,7 @@
 
 <p>This is result:</p>
 
-<p><img class="cga" id="draw.png" src="draw.png" alt="draw result"></p>
+<p><img class="cga" id="draw.png" src="images/draw.png" alt="draw result"></p>
 
 <p>Next, the program stores the rendered graphic as a sprite:</p>
 
@@ -167,7 +167,7 @@
 
 <p>Cartridge BASIC does not provide a way to reposition the single-pixel cursor without drawing. Instead, <span class="nowrap">line 100</span> renders the initial segment in color <code>6</code> (brown). From there, a for-loop reads coordinate pairs from a DATA statement, and it uses the line-to variant of the <code>LINE</code> statement to successively extend the path, again in color <code>6</code>. Notably, two endpoints are one pixel beyond the screen&rsquo;s right edge, which breaks the ceiling and floor into disjoint regions:</p>
 
-<p><img class="cga" id="cave-outline.png" src="cave-outline.png" alt="cave outline"></p>
+<p><img class="cga" id="cave-outline.png" src="images/cave-outline.png" alt="cave outline"></p>
 
 <p>Next, the program flood fills the ceiling and floor via <code>PAINT</code> statements:</p>
 
@@ -178,7 +178,7 @@
 
 <p>Regarding the arguments, the first <code>6</code> is the fill color, and the second <code>6</code> is color of the boundary to contain the flood. Both flood seed coordinates are within the screen&rsquo;s central column. The ceiling seed is ten rows from the top, and the floor seed is ten rows from the bottom.</p>
 
-<p><img class="cga" id="cave-filled.png" src="cave-filled.png" alt="cave filled"></p>
+<p><img class="cga" id="cave-filled.png" src="images/cave-filled.png" alt="cave filled"></p>
 
 <p>After painting the ceiling and floor, the program generates twenty random speleothems:</p>
 
@@ -197,7 +197,7 @@
 
 <p>For each speleothem, the program plots and fills a triangular shape made from two line segments extending from the ceiling or floor that meet at common point. As shown below, the program staggers the stalactites and stalagmites, unlike real speleothems, which form in aligned pairs.</p>
 
-<p><img class="cga" id="cave.png" src="cave.png" alt="cave"></p>
+<p><img class="cga" id="cave.png" src="images/cave.png" alt="cave"></p>
 
 <p>As previously mentioned, <code>XB</code> is the minimum stalactite height, a value that increases to make each level more difficult than the last. While the minimum stalagmite height remains constant, the growing stalactites will eventually manifest a kill screen. The specific level at which this occurs depends on the random number generator.</p>
 
@@ -210,7 +210,7 @@
 
 <p>For a true-to-original experience, the TypeScript port displays text using the 8&times;8 pixel glyphs of the monospaced CGA font.</p>
 
-<p><img class="cga" id="level-1.png" src="level-1.png" alt="level 1"></p>
+<p><img class="cga" id="level-1.png" src="images/level-1.png" alt="level 1"></p>
 
 <p>After that, the program initializes the variables that keep track of the ship&rsquo;s position and vertical velocity:</p>
 
@@ -228,15 +228,15 @@
 
 <p>The black pixels surrounding the ship, as shown in the magnified sprite below, are not transparent. However, when the sprite is rendered, those pixels become indistinguishable from those of the black background.</p>
 
-<p><img class="cga" id="ship-sprite.png" src="ship-sprite.png" alt="ship sprite" style="max-width: 255px;"></p>
+<p><img class="cga" id="ship-sprite.png" src="images/ship-sprite.png" alt="ship sprite" style="max-width: 255px;"></p>
 
 <p>Several graphical effects can be achieved with <code>PUT</code>&rsquo;s optional parameter. For example, to simulate transparency, a mask sprite is created with black pixels for the visible regions (all bits clear) and white pixels for the transparent regions (all bits set). Bitwise ANDing a background with the mask casts a silhouette on the background:</p>
 
-<p><img class="svg" id="bitwise-and.svg" src="bitwise-and.svg" alt="bitwise AND"></p>
+<p><img class="svg" id="bitwise-and.svg" src="images/bitwise-and.svg" alt="bitwise AND"></p>
 
 <p>Then the original sprite, with transparent regions colored black, is bitwise ORed over the silhouette:</p>
 
-<p><img class="svg" id="bitwise-or.svg" src="bitwise-or.svg" alt="bitwise OR"></p>
+<p><img class="svg" id="bitwise-or.svg" src="images/bitwise-or.svg" alt="bitwise OR"></p>
 
 <p><span class="nowrap"><i>Lunar Explorer</i></span> does not employ that technique. But it does take advance of the default bitwise XOR operation, as explained later.</p>
 
@@ -255,11 +255,11 @@
 390  IF X&lt;&gt;303 THEN GOTO 300
 </pre>
 
-<p>Reading the <code>INKEY$</code> variable dequeues and returns one character from the keyboard buffer or empty string when the keyboard buffer is clear. This technique is significantly different from the input handling in most modern programming languages, which are event-based due to the many levels of abstraction that evolved between peripheral hardware and software since the days of the PCjr.</p>
+<p>Reading the <code>INKEY$</code> variable dequeues and returns one character from the keyboard buffer or empty string when the keyboard buffer is clear. This polling technique is significantly different from input handling in most modern programming languages, which are event-based due to the many levels of abstraction that evolved between peripheral hardware and software since the days of the PCjr.</p>
 
 <p>The TypeScript port responds to mouse clicks and touch taps in addition to key presses.</p>
 
-<p>If there is no input, the program increases the ship&rsquo;s vertical velocity by 0.4 to simulate acceleration due to gravity. Otherwise, the program decreases the ship&rsquo;s vertical velocity by one and it emits a sound effect, via a pair of <code>NOISE</code> statements, reminiscent of a short jet blast.</p>
+<p>If there is no input, the program increments the ship&rsquo;s vertical velocity by 0.4 to simulate acceleration due to gravity. Otherwise, the program decrements the ship&rsquo;s vertical velocity by one and it emits a sound effect, via a pair of <code>NOISE</code> statements, suggesting a momentary release of thrust.</p>
 
 <p>The <code>NOISE</code> statement invokes the noise generator of the Texas Instruments <a href="https://en.wikipedia.org/wiki/Texas_Instruments_SN76489">SN76496</a> chip. The first parameter asserts the generation frequency and the noise type: periodic or white. The argument <code>4</code> means white noise at the NTSC colorburst frequency <span class="nowrap">(315/88 MHz)</span> divided by 512. The second parameter is the volume (0&ndash;15). The third parameter is the duration specified in system timer ticks at the default frequency of the Programmable Interval Timer <span class="nowrap">(18.2 ticks/sec)</span>, which gets delivered to the interpreter by a handler hooked to BIOS interrupt <code>8h</code>. The value <code>0.5</code> gets rounded to one tick. In summary, that pair of <code>NOISE</code> statements produces a high-pitched white noise that lasts about a tenth of a second with decreasing volume.</p>
 
@@ -271,7 +271,7 @@
 
 <p>After that, <span class="nowrap">line 370</span> probes three points about the ship indicated by the yellow pixels in the following image.</p>
 
-<p><img class="cga" id="ship-points.png" src="ship-points.png" alt="probe points" style="max-width: 315px;"></p>
+<p><img class="cga" id="ship-points.png" src="images/ship-points.png" alt="probe points" style="max-width: 315px;"></p>
 
 <p>If any of those points are brown, then the ship collided with the cave surface and the program jumps out of the game loop. Otherwise, the program renders the ship sprite at the new location.</p>
 
@@ -429,6 +429,6 @@ pcbasic --preset=pcjr
 </table>
 
 </main>
-<script type="module" src="index.bundle.js?v=2024-02-16"></script>
+<script type="module" src="scripts/index.bundle.js?v=2024-02-17"></script>
 </body>
 </html>

@@ -10,11 +10,21 @@
   "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
-    "clean": "rimraf public_html/*.bundle.js public_html/*.bundle.js.LICENSE.txt public_html/app/*.bundle.js public_html/app/*.bundle.js.LICENSE.txt public_html/app/lunar-explorer.zip",
-    "pack:index": "npx webpack --mode production --config ./webpack.config.index.mjs",
-    "pack:app": "npx webpack --mode production --config ./webpack.config.app.mjs",
-    "zip": "zip -r public_html/app/lunar-explorer.zip sfx/",
-    "build": "npm run clean && npm run pack:index && npm run pack:app && npm run zip"
+    "clean:index": "rimraf public_html/scripts/*.bundle.js public_html/scripts/*.bundle.js.LICENSE.txt",
+    "clean:pwa": "rimraf public_html/pwa/scripts/*.bundle.js public_html/pwa/scripts/*.bundle.js.LICENSE.txt",
+    "clean:sw": "rimraf public_html/pwa/*.bundle.js public_html/pwa/*.bundle.js.LICENSE.txt",
+    "clean:app": "rimraf public_html/pwa/app/resources.zip public_html/pwa/app/scripts/*.bundle.js public_html/pwa/app/scripts/*.bundle.js.LICENSE.txt",
+    "clean": "npm run clean:index && npm run clean:pwa && npm run clean:sw && npm run clean:app",
+
+    "pack:index": "npx webpack --mode production --config webpack.config.index.mjs",
+    "pack:pwa": "npx webpack --mode production --config webpack.config.pwa.mjs",
+    "pack:sw": "npx webpack --mode production --config webpack.config.sw.mjs",
+    "pack:app": "npx webpack --mode production --config webpack.config.app.mjs",
+    "pack": "npm run pack:index && npm run pack:pwa && npm run pack:sw && npm run pack:app",
+
+    "zip": "zip -r public_html/pwa/app/resources.zip sfx/",
+
+    "build": "npm run clean && npm run zip && npm run pack"
   },
   "devDependencies": {
     "rimraf": "^5.0.5",

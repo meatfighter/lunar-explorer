@@ -17,3 +17,5 @@ export async function init() {
 
     enterProgress();
 }
+
+document.addEventListener('DOMContentLoaded', init);
