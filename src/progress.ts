@@ -3,9 +3,8 @@ import { download } from "./download";
 import { decodeAudioData, waitForDecodes } from "./sfx";
 import { enter as enterStart } from "./start";
 
-const ZIP_DOWNLOAD_PERCENT = 90;
-
 let landscape = false;
+let progressBar: HTMLProgressElement;
 
 export function enter() {
     window.addEventListener('resize', windowResized);
@@ -19,13 +18,26 @@ export function enter() {
 
     windowResized();
 
-    const progressBar = document.getElementById('loading-progress') as HTMLProgressElement;
-    download('resources.zip', frac => progressBar.value = ZIP_DOWNLOAD_PERCENT * frac).then(onDownload);
+    progressBar = document.getElementById('loading-progress') as HTMLProgressElement;
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', messageReceived);
+    }
+    download('resources.zip', frac => progressBar.value = 100 * frac).then(onDownload);
 }
 
 export function exit() {
     window.removeEventListener('resize', windowResized);
     window.removeEventListener('touchmove', onTouchMove);
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', messageReceived);
+    }
+}
+
+function messageReceived(e: MessageEvent<number>) {
+    if (progressBar) {
+        progressBar.value = 100 * e.data;
+    }
 }
 
 function onDownload(arrayBuffer: Uint8Array) {
