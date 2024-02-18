@@ -13,13 +13,6 @@ body {
     user-select: none;
 }
 
-html, body {
-    overflow-x: hidden;
-    overflow-y: hidden;
-    height: 101vh;
-    margin: 0;
-}
-
 body, button, input, select, textarea {
     font-family: 'Open Sans', sans-serif;
 }

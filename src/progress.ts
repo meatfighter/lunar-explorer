@@ -12,8 +12,10 @@ export function enter() {
 
     const mainElement = document.getElementById('main-content') as HTMLElement;
     mainElement.innerHTML = `
-            <div id="progress-div">
-                <progress id="loading-progress" value="0" max="100"></progress>
+            <div id="progress-container">
+                <div id="progress-div">
+                    <progress id="loading-progress" value="0" max="100"></progress>
+                </div>
             </div>`;
 
     windowResized();
@@ -96,7 +98,11 @@ function onTouchMove(e: TouchEvent) {
 }
 
 function windowResized() {
+    const progressContainer = document.getElementById('progress-container') as HTMLDivElement;
     const progressDiv = document.getElementById('progress-div') as HTMLDivElement;
+
+    progressContainer.style.width = progressContainer.style.height = '';
+    progressContainer.style.display = 'none';
 
     progressDiv.style.top = progressDiv.style.left = progressDiv.style.transform = '';
     progressDiv.style.display = 'none';
@@ -104,6 +110,11 @@ function windowResized() {
     const innerWidth = window.innerWidth;
     const innerHeight = window.innerHeight;
     landscape = (innerWidth >= innerHeight);
+
+    progressContainer.style.width = `${innerWidth}px`;
+    progressContainer.style.height = `${innerHeight}px`;
+    progressContainer.style.display = 'block';
+
     progressDiv.style.display = 'flex';
 
     if (landscape) {
@@ -116,6 +127,4 @@ function windowResized() {
         progressDiv.style.left = `${(innerWidth - rect.height) / 2}px`
         progressDiv.style.top = `${(innerHeight - rect.width) / 2}px`;
     }
-
-    setTimeout(() => window.scrollTo(0, 1), 0); // hide the address bar
 }
