@@ -12,15 +12,17 @@ export function enter() {
 
     const mainElement = document.getElementById('main-content') as HTMLElement;
     mainElement.innerHTML = `
-            <div id="start-div">
-                <div class="volume-div">
-                    <span class="left-volume-label material-icons" id="left-volume-span" 
-                            lang="en">volume_mute</span>
-                    <input type="range" id="volume-input" min="0" max="100" step="any" value="10">
-                    <span class="right-volume-label" id="right-volume-span" lang="en">100</span>
-                </div>
-                <div id="go-div">
-                    <button id="start-button">Start</button>
+            <div id="start-container">
+                <div id="start-div">
+                    <div class="volume-div">
+                        <span class="left-volume-label material-icons" id="left-volume-span" 
+                                lang="en">volume_mute</span>
+                        <input type="range" id="volume-input" min="0" max="100" step="any" value="10">
+                        <span class="right-volume-label" id="right-volume-span" lang="en">100</span>
+                    </div>
+                    <div id="go-div">
+                        <button id="start-button">Start</button>
+                    </div>
                 </div>
             </div>`;
 
@@ -96,16 +98,28 @@ function volumeChanged() {
 }
 
 function windowResized() {
+    const startContainer = document.getElementById('start-container') as HTMLDivElement;
     const startDiv = document.getElementById('start-div') as HTMLDivElement;
     const leftVolumeSpan = document.getElementById('left-volume-span') as HTMLSpanElement;
     const rightVolumeSpan = document.getElementById('right-volume-span') as HTMLSpanElement;
 
-    startDiv.style.top = startDiv.style.left = startDiv.style.transform = '';
+    startContainer.style.width = startContainer.style.height = '';
+    startContainer.style.left = startContainer.style.top = '';
+    startContainer.style.display = 'none';
+
+    startDiv.style.left = startDiv.style.top = startDiv.style.transform = '';
     startDiv.style.display = 'none';
 
     const innerWidth = window.innerWidth;
     const innerHeight = window.innerHeight;
     landscape = (innerWidth >= innerHeight);
+
+    startContainer.style.left = '0px';
+    startContainer.style.top = '0px';
+    startContainer.style.width = `${innerWidth}px`;
+    startContainer.style.height = `${innerHeight}px`;
+    startContainer.style.display = 'block';
+
     startDiv.style.display = 'flex';
 
     leftVolumeSpan.style.width = '';

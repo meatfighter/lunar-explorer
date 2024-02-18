@@ -26,6 +26,11 @@ body, button, input, select, textarea {
     position: absolute;
 }
 
+#start-container {
+    display: block;
+    position: absolute;
+}
+
 #start-div {
     position: absolute;
     display: flex;
