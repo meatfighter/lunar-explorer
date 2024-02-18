@@ -139,7 +139,7 @@
 80   GET(0,0)-(16,8),S
 </pre>
 
-<p>The <code>GET</code> statement treats the provided array as a string of bytes. It packs the sprite&rsquo;s width into the first two bytes, and the sprite&rsquo;s height into the next two bytes. Then it separately packs each row of pixel data into the remaining bytes. In this case, the width is <span class="nowrap">16 &minus; 0 + 1 = 17 pixels</span>. At one nibble per pixel and two nibbles per byte, each row requires <span class="nowrap">&lceil;17 / 2&rceil; = 9 bytes</span>. In total, the sprite consumes <span class="nowrap">2 + 2 + (9 bytes/row) &times; (9 rows) = 85 bytes</span>.</p>
+<p>The <code>GET</code> statement treats the provided array as a string of bytes. It packs the sprite&rsquo;s width into the first two bytes, and the sprite&rsquo;s height into the next two bytes. Then it separately packs each row of pixel data into the remaining bytes. In this case, the width is <span class="nowrap">16 &minus; 0 + 1 = 17 pixels</span> and the height is <span class="nowrap">8 &minus; 0 + 1 = 9 pixels</span>. At one nibble per pixel and two nibbles per byte, each row requires <span class="nowrap">&lceil;17 / 2&rceil; = 9 bytes</span>. In total, the sprite consumes <span class="nowrap">2 + 2 + (9 bytes/row) &times; (9 rows) = 85 bytes</span>.</p>
 
 <p>At first glance, that seems to explain the argument provided to the <code>DIM</code> statement. But, by default, the <code>DIM</code> statement allocates an array of single-precision floating-point numbers, where each element occupies four bytes. Consequently, the sprite needs an array of length <span class="nowrap">&lceil;85 / 4&rceil; = 22 elements</span>.
 
@@ -224,7 +224,7 @@
 290  PUT(X,Y),S
 </pre>
 
-<p>The <code>PUT</code> statements accepts an optional parameter that specifies how the sprite combines with the pixels of the video page. Since only three arguments were provided on <span class="nowrap">line 290</span>, <code>PUT</code> defaults to bitwise XOR. But it can also bitwise OR, bitwise AND, transfer without blending, or invert and transfer without blending. Since the background is color <code>0</code> (black), bitwise XORing the pixels does not modify the sprite&rsquo;s colors.</p>
+<p>The <code>PUT</code> statement accepts an optional parameter that specifies how the sprite combines with the pixels of the video page. Since only three arguments were provided on <span class="nowrap">line 290</span>, <code>PUT</code> defaults to bitwise XOR. But it can also bitwise OR, bitwise AND, transfer without blending, or invert and transfer without blending. Since the background is color <code>0</code> (black), bitwise XORing the pixels does not modify the sprite&rsquo;s colors.</p>
 
 <p>The black pixels surrounding the ship, as shown in the magnified sprite below, are not transparent. However, when the sprite is rendered, those pixels become indistinguishable from those of the black background.</p>
 
@@ -267,9 +267,9 @@
 
 <p>Before the program updates the ship&rsquo;s coordinates, <span class="nowrap">line 350</span> renders the ship sprite at its current location. This erases the ship because twice bitwise XORing a sprite pixel with a background pixel restores the original background pixel.</p>
 
-<p>Next, the program increments the ship&rsquo;s horizontal coordinate by its constant horizontal velocity (one). And it increments the ship&rsquo;s vertical coordinate by its changing vertical velocity (<code>YAD</code>).</p>
+<p>Next, the program increments the ship&rsquo;s horizontal coordinate by one, a constant horizontal velocity. And it increments the ship&rsquo;s vertical coordinate by <code>YAD</code>, the varying vertical velocity.</p>
 
-<p>After that, <span class="nowrap">line 370</span> probes three points about the ship indicated by the yellow pixels in the following image.</p>
+<p>After that, <span class="nowrap">line 370</span> probes the three points about the ship indicated by yellow pixels in the following image.</p>
 
 <p><img class="cga" id="ship-points.png" src="images/ship-points.png" alt="probe points" style="max-width: 315px;"></p>
 
@@ -331,7 +331,7 @@
 
 <p>The <code>END</code> statement does not restore the soft key text at the bottom of the screen, nor does it switch back to the original video mode. The program leaves it to the user to issue <code>KEY ON</code> and <code>SCREEN</code> <i>mode</i>.</p>
 
-<p>If the user types &ldquo;Y&rdquo;, the program resets the level number and the stalactite height before generating a new cave.</p>
+<p>If the user types anything other than &ldquo;N&rdquo;, the program resets the level number and the stalactite height before generating a new cave.</p>
 
 <p><span class="nowrap">Line 520</span>, shown earlier, contains the <code>DATA</code> statement.</p>
 
