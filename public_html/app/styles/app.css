@@ -149,6 +149,11 @@ button:focus {
     outline: none;
 }
 
+#progress-container {
+    display: block;
+    position: absolute;
+}
+
 #progress-div {
     position: absolute;
     display: flex;
