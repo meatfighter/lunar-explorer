@@ -101,9 +101,6 @@ function windowResized() {
     const progressContainer = document.getElementById('progress-container') as HTMLDivElement;
     const progressDiv = document.getElementById('progress-div') as HTMLDivElement;
 
-    progressContainer.style.width = progressContainer.style.height = '';
-    progressContainer.style.display = 'none';
-
     progressDiv.style.top = progressDiv.style.left = progressDiv.style.transform = '';
     progressDiv.style.display = 'none';
 
@@ -113,7 +110,6 @@ function windowResized() {
 
     progressContainer.style.width = `${innerWidth}px`;
     progressContainer.style.height = `${innerHeight}px`;
-    progressContainer.style.display = 'block';
 
     progressDiv.style.display = 'flex';
 
