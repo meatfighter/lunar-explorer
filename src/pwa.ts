@@ -8,6 +8,8 @@ function startApp() {
 }
 
 export function init() {
+    document.removeEventListener('DOMContentLoaded', init);
+
     window.addEventListener('error',onError);
     window.addEventListener('unhandledrejection', onUnhandledRejection);
     document.addEventListener('dblclick', onDoubleClick, { passive: false });

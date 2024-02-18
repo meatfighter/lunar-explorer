@@ -384,6 +384,8 @@ function windowResized() {
     ctx.setTransform(transform);
 
     render();
+
+    setTimeout(() => window.scrollTo(0, 1), 0); // hide the address bar
 }
 
 function onVisibilityChanged() {

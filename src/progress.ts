@@ -22,7 +22,10 @@ export function enter() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('message', messageReceived);
     }
-    download('resources.zip', frac => progressBar.value = 100 * frac).then(onDownload);
+    download('resources.zip', frac => {
+        progressBar.value = 100 * frac;
+        setProgressBarColor('#0075FF');
+    }).then(onDownload);
 }
 
 export function exit() {
@@ -34,9 +37,39 @@ export function exit() {
     }
 }
 
+function setProgressBarColor(color: string) {
+
+    if (progressBar) {
+        if (color === progressBar.style.color) {
+            return;
+        }
+        progressBar.style.color = color;
+    }
+
+    const styleId: string = 'progress-bar-style';
+
+    let styleSheet: HTMLStyleElement | null = document.getElementById(styleId) as HTMLStyleElement;
+
+    if (!styleSheet) {
+        styleSheet = document.createElement("style");
+        styleSheet.id = styleId;
+        document.head.appendChild(styleSheet);
+    }
+
+    styleSheet.innerText = `
+        #loading-progress::-webkit-progress-value {
+            background-color: ${color} !important;
+        }
+        #loading-progress::-moz-progress-bar {
+            background-color: ${color} !important;
+        }
+    `;
+}
+
 function messageReceived(e: MessageEvent<number>) {
     if (progressBar) {
         progressBar.value = 100 * e.data;
+        setProgressBarColor('#48D800');
     }
 }
 
@@ -83,4 +116,6 @@ function windowResized() {
         progressDiv.style.left = `${(innerWidth - rect.height) / 2}px`
         progressDiv.style.top = `${(innerHeight - rect.width) / 2}px`;
     }
+
+    setTimeout(() => window.scrollTo(0, 1), 0); // hide the address bar
 }

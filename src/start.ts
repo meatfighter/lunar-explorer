@@ -14,7 +14,7 @@ export function enter() {
     mainElement.innerHTML = `
             <div id="start-div">
                 <div class="volume-div">
-                    <span class="left-volume-label material-symbols-outlined" id="left-volume-span" 
+                    <span class="left-volume-label material-icons" id="left-volume-span" 
                             lang="en">volume_mute</span>
                     <input type="range" id="volume-input" min="0" max="100" step="any" value="10">
                     <span class="right-volume-label" id="right-volume-span" lang="en">100</span>
@@ -83,7 +83,7 @@ function volumeChanged() {
     volumeInput.style.setProperty('--thumb-position', `${volume}%`);
 
     if (volume === 0) {
-        leftVolumeSpan.textContent = 'no_sound';
+        leftVolumeSpan.textContent = 'volume_off';
     } else if (volume < 33) {
         leftVolumeSpan.textContent = 'volume_mute';
     } else if (volume < 66) {

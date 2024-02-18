@@ -13,6 +13,13 @@ body {
     user-select: none;
 }
 
+html, body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: 101vh;
+    margin: 0;
+}
+
 body, button, input, select, textarea {
     font-family: 'Open Sans', sans-serif;
 }
@@ -187,8 +194,4 @@ button:focus {
 
 #fatal-error {
     font-size: 4em;
-}
-
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
