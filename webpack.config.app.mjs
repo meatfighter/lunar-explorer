@@ -8,7 +8,7 @@ export default {
     output: {
         filename: '[name].bundle.js',
         chunkFilename: '[name].bundle.js',
-        path: path.resolve(process.cwd(), 'public_html/pwa/app/scripts'),
+        path: path.resolve(process.cwd(), 'public_html/app/scripts'),
     },
     module: {
         rules: [

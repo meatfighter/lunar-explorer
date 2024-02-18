@@ -4,17 +4,17 @@
   "description": "A game that challenges the player to maneuver a spacecraft through a cave bristling with sharp rocks by tapping just one button.",
   "icons": [
     {
-      "src": "pwa/app/icons/google-touch-icon-192.png",
+      "src": "app/icons/google-touch-icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "pwa/app/icons/google-touch-icon-512.png",
+      "src": "app/icons/google-touch-icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "pwa/app/icons/favicon.svg",
+      "src": "app/icons/favicon.svg",
       "type": "image/svg+xml",
       "sizes": "any"
     }

@@ -15,13 +15,14 @@ export function enter() {
             <div id="progress-div">
                 <progress id="loading-progress" value="0" max="100"></progress>
             </div>`;
-
-    windowResized();
-
     progressBar = document.getElementById('loading-progress') as HTMLProgressElement;
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('message', messageReceived);
     }
+
+    windowResized();
+
     download('resources.zip', frac => {
         progressBar.value = 100 * frac;
         setProgressBarColor('#0075FF');
