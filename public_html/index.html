@@ -28,14 +28,16 @@
 
 <p><img class="centered" src="app/icons/favicon.svg" id="logo" alt="Lunar Explorer" style="max-width: 180px;"></p>
 
-<h1>About</h1>
+<p id="index" class="centered">[ <a href="#about" target="_self">About</a> | <a href="#introduction" target="_self">Introduction</a> | <a href="#deep-dive" target="_self">Deep Dive</a> | <a href="#typescript-port" target="_self">TypeScript Port</a> | <a href="#emulation" target="_self">Emulation</a> ]</p>
+
+<h1 id="about"><a class="header" href="#about" target="_self">About</a></h1>
 
 <p>Before <i>Geometry Dash</i>, before <i>Flappy Bird</i>, before the myriad of other single-button diversions, there was <span class="nowrap"><i>Lunar Explorer</i></span>, a type-in game published in the <a href="https://archive.org/details/321aug87/page/n36/mode/1up">August 1987 issue</a> of <i>3-2-1 Contact</i> magazine that was written in the BASIC programming language by Brandon Tibbets, a high school junior from West Hartford, Connecticut. His game challenges the player to maneuver a spacecraft through a cave bristling with sharp rocks by tapping just one button. This article describes how his code works and it provides a TypeScript port playable in the browser.</p>
 
 <button class="button" id="playButton">Play</button>
 
 
-<h1>Introduction</h1>
+<h1 id="introduction"><a class="header" href="#introduction" target="_self">Introduction</a></h1>
 
 <p>In March 1984, IBM launched the PCjr with the aim of dominating the home computer market just as its predecessor, the PC, had in the business sector three years prior. With that different audience in mind, IBM equipped the PCjr with features predominately intended for gaming, including enhanced CGA graphics modes, a multichannel sound chip, two joystick ports, a port for a mouse or a light pen, a pair of cartridge slots, and an IR receiver for a wireless keyboard. Despite those features, the PCjr struggled to establish a market presence, leading IBM to discontinue the machine in March 1985.</p>
 
@@ -50,7 +52,7 @@
 <p><img class="centered" id="cartridge-basic.jpg" src="images/cartridge-basic.jpg" alt="cartridge basic"></p>
 
 
-<h1>Deep Dive</h1>
+<h1 id="deep-dive"><a class="header" href="#deep-dive" target="_self">Deep Dive</a></h1>
 
 <p>The first line seeds the random number generator with the number of seconds elapsed since midnight or system reset:</p>
 
@@ -336,7 +338,7 @@
 <p><span class="nowrap">Line 520</span>, shown earlier, contains the <code>DATA</code> statement.</p>
 
 
-<h1>TypeScript Port</h1>
+<h1 id="typescript-port"><a class="header" href="#typescript-port" target="_self">TypeScript Port</a></h1>
 
 <p>As revealed below, the TypeScript port implements functions that reproduce the effects of the BASIC statements. They render to a <span class="nowrap">320&times;200 pixel</span> back buffer that is subsequently transferred to the display. The port leverages <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a> for the equivalent of the <code>LINE</code> statement and the <a href="https://en.wikipedia.org/wiki/Flood_fill">flood fill algorithm</a> for equivalent of the <code>PAINT</code> statement. The analog of the <code>DRAW</code> statement contains a &ldquo;graphics definition language&rdquo; interpreter.</p>
 
@@ -403,7 +405,7 @@ shipY <span class="num">+=</span> shipVy;
 </pre>
 
 
-<h1>Emulation</h1>
+<h1 id="emulation"><a class="header" href="#emulation" target="_self">Emulation</a></h1>
 
 <p>The easiest way to run the original source on a modern machine is to use <span class="nowrap">PC-BASIC</span>, a free, cross-platform, open-source interpreter for several BASIC dialects and graphical configurations of early PC compatibles. It can be downloaded <a href="https://robhagemans.github.io/pcbasic/download.html">here</a>.</p>
 
