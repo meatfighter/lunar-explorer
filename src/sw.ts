@@ -1,6 +1,6 @@
 declare const self: ServiceWorkerGlobalScope;
 
-export const CACHE_NAME = 'lunar-explorer-2024-02-18';
+export const CACHE_NAME = 'lunar-explorer-2024-02-20';
 
 const MAX_FETCH_RETRIES = 5;
 
@@ -72,6 +72,11 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+
+    if (!e.request.url.startsWith('http')) {
+        return;
+    }
+
     e.respondWith(
         caches.open(CACHE_NAME).then(cache => {
             return cache.match(e.request).then(cachedResponse => {
