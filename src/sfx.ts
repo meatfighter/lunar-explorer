@@ -26,11 +26,13 @@ const promises: Promise<Map<string, AudioBuffer>>[] = [];
 
 const audioBuffers = new Map<string, AudioBuffer>();
 
-export function getVolume() {
-    return 100 * masterGain.gain.value;
-}
-
 export function setVolume(volume: number) {
+    if (audioContext.state === 'suspended') {
+        if (docVisible) {
+            audioContext.resume().then(() => setVolume(volume));
+        }
+        return;
+    }
     masterGain.gain.value = volume / 100;
 }
 

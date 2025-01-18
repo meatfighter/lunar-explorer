@@ -1,7 +1,7 @@
-import { getVolume, setVolume } from "./sfx";
+import { setVolume } from "./sfx";
 import { enter as enterGame } from "./game";
 
-let volume = 0;
+let volume = 10;
 let landscape = false;
 
 export function enter() {
@@ -17,7 +17,7 @@ export function enter() {
                     <div class="volume-div">
                         <span class="left-volume-label material-icons" id="left-volume-span" 
                                 lang="en">volume_mute</span>
-                        <input type="range" id="volume-input" min="0" max="100" step="any" value="10">
+                        <input type="range" id="volume-input" min="0" max="100" step="any" value="${volume}">
                         <span class="right-volume-label" id="right-volume-span" lang="en">100</span>
                     </div>
                     <div id="go-div">
@@ -26,7 +26,6 @@ export function enter() {
                 </div>
             </div>`;
 
-    volume = getVolume();
     const volumeInput = document.getElementById('volume-input') as HTMLInputElement;
     volumeInput.addEventListener('input', volumeChanged);
     volumeInput.value = String(volume);

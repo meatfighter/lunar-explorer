@@ -1,6 +1,6 @@
 declare const self: ServiceWorkerGlobalScope;
 
-export const CACHE_NAME = 'lunar-explorer-2024-02-20';
+export const CACHE_NAME = 'lunar-explorer-2025-01-18';
 
 const MAX_FETCH_RETRIES = 5;
 
